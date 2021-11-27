@@ -6,7 +6,8 @@ import com.letiencao.model.FriendModel;
 
 public interface IFriendService {
 	Long insertOne(Long idRequest,Long idRequested);
-	List<FriendModel> findListFriendRequestById(Long id);
+	List<FriendModel> findListFriendRequestByIdA(Long idA);
+	List<FriendModel> findListFriendRequestByIdB(Long idB);
 	boolean checkFriendExisted(Long idRequest,Long idRequested,boolean isFriend); //isFriend = true
 	boolean checkRequestExisted(Long idRequest,Long idRequested,boolean isFriend);//isFriend = false
 	boolean setIsFriend(Long idRequest,Long idRequested);

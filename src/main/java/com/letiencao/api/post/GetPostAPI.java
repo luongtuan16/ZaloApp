@@ -103,30 +103,19 @@ public class GetPostAPI extends HttpServlet {
 		Gson gson = new Gson();
 		DataGetPostReponse dataGetPostReponse = new DataGetPostReponse();
 		GetPostResponse getPostResponse = new GetPostResponse();
-//		try {
-//			GetPostRequest getPostRequest = gson.fromJson(request.getReader(), GetPostRequest.class);
-//			if (getPostRequest != null) {
 		GetPostRequest getPostRequest = new GetPostRequest();
 		String idQuery = request.getParameter("id");
-		
 		// get token
-		String jwt = request.getHeader(BaseHTTP.Authorization);
-		
+		// String jwt = request.getHeader(BaseHTTP.Authorization);
+		String jwt = request.getParameter("token");
 		if (idQuery != null) {
 			getPostRequest.setId(Long.valueOf(idQuery));
 			Long postId = getPostRequest.getId();
 			if (postId > 0) {
 				dataGetPostReponse.setId(postId);
 				// search post by id
-//						PostModel postModel = postService.findPostById(postId);// get author
 				PostModel postModel = postService.findPostById(postId);
-				if (postModel == null) {
-					System.out.println(1);
-					postModel = postService.findById(postId);
-				} else {
-					System.out.println(2);
-					postModel = postService.findPostById(postId);
-				}
+
 				if (postModel != null) {
 					System.out.println("postModel = " + postModel);
 //					PostModel postModel = postService.findPostById(postId);
@@ -144,28 +133,28 @@ public class GetPostAPI extends HttpServlet {
 					AccountModel accountModel = accountService.findByPhoneNumber(phoneNumber);// jwt
 					Long accountId = accountModel.getId();
 					boolean checkThisUserLiked = likesService.checkThisUserLiked(accountId, postId);
-					dataGetPostReponse.setLiked(checkThisUserLiked);
+					dataGetPostReponse.setIs_liked(checkThisUserLiked);
 					// is_blocked
 					BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountId);
 					if (blocksModel == null) {
-						dataGetPostReponse.setIsBlocked("UnBlocked");
+						dataGetPostReponse.setIs_blocked("UnBlocked");
 					} else {
-						dataGetPostReponse.setIsBlocked("Blocked");
+						dataGetPostReponse.setIs_blocked("Blocked");
 					}
 					// can_edit
 					if (accountId == postModel.getAccountId()) {
-						dataGetPostReponse.setCanEdit("Can Edit");
+						dataGetPostReponse.setCan_edit("Can Edit");
 					} else {
-						dataGetPostReponse.setCanEdit("Can't Edit");
+						dataGetPostReponse.setCan_edit("Can't Edit");
 					}
-					if (dataGetPostReponse.getIsBlocked().equalsIgnoreCase("Blocked")) {
-						dataGetPostReponse.setCanComment("Can't Comment");
+					if (dataGetPostReponse.getIs_blocked().equalsIgnoreCase("Blocked")) {
+						dataGetPostReponse.setCan_comment("Can't Comment");
 					} else {
-						dataGetPostReponse.setCanComment("Can Comment");
+						dataGetPostReponse.setCan_comment("Can Comment");
 					}
 					// get file
 					List<ImageGetPostResponse> imageGetPostResponses = new ArrayList<ImageGetPostResponse>();
-					List<VideoGetPostResponse> videoGetPostResponses = new ArrayList<VideoGetPostResponse>();
+					VideoGetPostResponse videoGetPostResponse = new VideoGetPostResponse();
 					if (fileService.findByPostId(postId) != null) {
 						List<FileModel> list = fileService.findByPostId(postId);
 						System.out.println("size = " + fileService.findByPostId(postId).size());
@@ -178,24 +167,26 @@ public class GetPostAPI extends HttpServlet {
 								imageGetPostResponse.setUrl(fileModel.getContent());
 								imageGetPostResponses.add(imageGetPostResponse);
 							} else if (fileModel.getContent().endsWith(".mp4")) {
-								VideoGetPostResponse videoGetPostResponse = new VideoGetPostResponse();
-								videoGetPostResponse.setId(fileModel.getId());
+//								VideoGetPostResponse videoGetPostResponse = new VideoGetPostResponse();
+//								videoGetPostResponse.setId(fileModel.getId());
+//								videoGetPostResponse.setUrl(fileModel.getContent());
+//								videoGetPostResponses.add(videoGetPostResponse);
+								videoGetPostResponse.setThumbnail(fileModel.getContent());
 								videoGetPostResponse.setUrl(fileModel.getContent());
-								videoGetPostResponses.add(videoGetPostResponse);
 							}
 						}
 					} else {
 						imageGetPostResponses = null;
-						videoGetPostResponses = null;
+						videoGetPostResponse = null;
 					}
 					// get author
 					AuthorGetPostResponse authorGetPostResponse = new AuthorGetPostResponse();
 					authorGetPostResponse.setId(postModel.getAccountId());
 					authorGetPostResponse.setName(accountService.findById(postModel.getAccountId()).getName());
 					authorGetPostResponse.setAvatar(accountService.findById(postModel.getAccountId()).getAvatar());
-					dataGetPostReponse.setAuthorGetPostResponse(authorGetPostResponse);
-					dataGetPostReponse.setListImage(imageGetPostResponses);
-					dataGetPostReponse.setListVideo(videoGetPostResponses);
+					dataGetPostReponse.setAuthor(authorGetPostResponse);
+					dataGetPostReponse.setImage(imageGetPostResponses);
+					dataGetPostReponse.setVideo(videoGetPostResponse);
 					// set created modified in long type
 					dataGetPostReponse.setCreated(
 							String.valueOf(genericService.convertTimestampToSeconds(postModel.getCreatedDate())));
@@ -226,21 +217,7 @@ public class GetPostAPI extends HttpServlet {
 			response.getWriter().print(gson.toJson(getPostResponse));
 			return;
 		}
-//			} else {
-//				getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-//				getPostResponse.setDataGetPostReponse(null);
-//				getPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
-//				response.getWriter().print(gson.toJson(getPostResponse));
-//				return;
-//			}
-//		} catch (NumberFormatException | JsonSyntaxException e) {
-//			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
-//			getPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
-//			getPostResponse.setDataGetPostReponse(null);
-//		} catch (NullPointerException e) {
-//			getPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9992));
-//			getPostResponse.setMessage(BaseHTTP.MESSAGE_9992);
-//			getPostResponse.setDataGetPostReponse(null);
+
 //		}
 		response.getWriter().print(gson.toJson(getPostResponse));
 	}

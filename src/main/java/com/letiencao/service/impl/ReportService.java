@@ -32,6 +32,9 @@ public class ReportService implements IReportService {
 		}
 		return false;
 	}
+	@Override
+	public boolean deleteByPostId(Long postId) {
+		return reportDAO.deleteByPostId(postId);
+	}
 	
-
 }

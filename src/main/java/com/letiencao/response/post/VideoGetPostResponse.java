@@ -1,15 +1,17 @@
 package com.letiencao.response.post;
 
 public class VideoGetPostResponse {
-	private Long id;
+	private String thumbnail;
 	private String url;
 
-	public Long getId() {
-		return id;
+	
+
+	public String getThumbnail() {
+		return thumbnail;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 
 	public String getUrl() {

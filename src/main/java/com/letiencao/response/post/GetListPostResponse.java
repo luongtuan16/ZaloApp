@@ -1,39 +1,28 @@
 package com.letiencao.response.post;
 
-import java.util.List;
-
 import com.letiencao.response.BaseResponse;
 
 public class GetListPostResponse extends BaseResponse {
-	private List<DataGetPostReponse> posts;
-	private int newItems;
-	private Long lastId;
-
+	private DataGetListPost data;
+	private String in_campaign;
+	private String campaign_id;
+	public DataGetListPost getData() {
+		return data;
+	}
+	public void setData(DataGetListPost data) {
+		this.data = data;
+	}
+	public String getIn_campaign() {
+		return in_campaign;
+	}
+	public void setIn_campaign(String in_campaign) {
+		this.in_campaign = in_campaign;
+	}
+	public String getCampaign_id() {
+		return campaign_id;
+	}
+	public void setCampaign_id(String campaign_id) {
+		this.campaign_id = campaign_id;
+	}
 	
-	
-
-	public int getNewItems() {
-		return newItems;
-	}
-
-	public void setNewItems(int newItems) {
-		this.newItems = newItems;
-	}
-
-	public Long getLastId() {
-		return lastId;
-	}
-
-	public void setLastId(Long lastId) {
-		this.lastId = lastId;
-	}
-
-	public List<DataGetPostReponse> getList() {
-		return posts;
-	}
-
-	public void setList(List<DataGetPostReponse> list) {
-		this.posts = list;
-	}
-
 }

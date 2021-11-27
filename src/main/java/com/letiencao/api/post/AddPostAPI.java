@@ -54,9 +54,11 @@ public class AddPostAPI extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
 		AddPostResponse addPostResponse = new AddPostResponse();
-		String token = request.getHeader(BaseHTTP.Authorization);
+		//String token = request.getHeader(BaseHTTP.Authorization);
+		String token = request.getParameter("token");
 		String describedRequest = null;
 		List<String> files = new ArrayList<String>();// luu ten file de save db
 		Gson gson = new Gson();
@@ -76,19 +78,13 @@ public class AddPostAPI extends HttpServlet {
 		try {
 
 			list = servletFileUpload.parseRequest(request);
+			System.out.println(list.size());
 			for (FileItem fileItem : list) {
-				// get key files
-//				if(fileItem.getFieldName().equalsIgnoreCase("video") && fileItem.getFieldName().equalsIgnoreCase("image")) {
-//					System.out.println("111111111111111222222222222222222333333");
-//					parameterTypeInValid(addPostResponse);
-//					return;
-//				}
 				System.out.println("FileITem == " + fileItem.getFieldName());
 				if (fileItem.getFieldName().equalsIgnoreCase("video")) {
-					if (fileItem.getString().endsWith(".mp4")||fileItem.getString().endsWith(".MP4")) {
+					if (fileItem.getName().endsWith(".mp4")||fileItem.getName().endsWith(".MP4")) {
 						if (countVideo < 1) {
 							if (image == true) {
-								System.out.println("11111111111111111111111111111");
 								parameterInValid(addPostResponse);
 								response.getWriter().print(gson.toJson(addPostResponse));
 								return;
@@ -110,12 +106,11 @@ public class AddPostAPI extends HttpServlet {
 						return;
 					}
 				} else if (fileItem.getFieldName().equalsIgnoreCase("image")) {
-					if (fileItem.getString().endsWith(".jpg") || fileItem.getString().endsWith(".svg")
-							|| fileItem.getString().endsWith(".JPEG") 
-							|| fileItem.getString().endsWith(".png")) {
+					if (fileItem.getName().endsWith(".jpg") || fileItem.getName().endsWith(".svg")
+							|| fileItem.getName().endsWith(".JPEG") 
+							|| fileItem.getName().endsWith(".png")) {
 						if (countImage < 4) {
 							if (video == true) {
-								System.out.println("111111111111111222222222222222222333333");
 								parameterInValid(addPostResponse);
 								response.getWriter().print(gson.toJson(addPostResponse));
 								return;
@@ -161,7 +156,7 @@ public class AddPostAPI extends HttpServlet {
 		} else {
 			// <= MAX = > write File
 			for (FileItem item : containFileItems) {
-				String itemName = item.getName();
+				String itemName = root + "\\" +item.getName();
 				files.add(itemName);
 			}
 		}
@@ -192,7 +187,7 @@ public class AddPostAPI extends HttpServlet {
 				addPostResponse.setCode(String.valueOf(1000));
 				addPostResponse.setDataPostResponse(dataPostResponse);
 				addPostResponse.setMessage("OK");
-				writeFile(containFileItems, addPostResponse, gson);
+				writeFile(containFileItems);
 				response.getWriter().print(gson.toJson(addPostResponse));
 			}
 		} catch (NullPointerException e) {
@@ -251,20 +246,18 @@ public class AddPostAPI extends HttpServlet {
 		addPostResponse.setMessage(BaseHTTP.MESSAGE_1006);
 	}
 
-	public void writeFile(List<FileItem> fileItems, AddPostResponse addPostResponse, Gson gson) {
+	public void writeFile(List<FileItem> fileItems) {
 		for (FileItem item : fileItems) {
 			if (item.getName() != null) {
 				try {
 					item.write(new File(uploadFolder() + "//" + item.getName()));
 				} catch (Exception e) {
-					addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
-					addPostResponse.setDataPostResponse(null);
-					addPostResponse.setMessage(BaseHTTP.MESSAGE_1010);
+//					addPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
+//					addPostResponse.setDataPostResponse(null);
+//					addPostResponse.setMessage(BaseHTTP.MESSAGE_1010);
 					System.out.println("Error = " + e.getMessage());
 				}
 			}
 		}
-
 	}
-
 }

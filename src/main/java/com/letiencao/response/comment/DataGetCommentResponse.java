@@ -4,7 +4,7 @@ public class DataGetCommentResponse {
 	private Long id;
 	private String content;
 	private Long created;
-	private PosterResponse posterResponse;
+	private PosterResponse poster;
 	public Long getId() {
 		return id;
 	}
@@ -23,11 +23,11 @@ public class DataGetCommentResponse {
 	public void setCreated(Long created) {
 		this.created = created;
 	}
-	public PosterResponse getPosterResponse() {
-		return posterResponse;
+	public PosterResponse getPoster() {
+		return poster;
 	}
-	public void setPosterResponse(PosterResponse posterResponse) {
-		this.posterResponse = posterResponse;
+	public void setPoster(PosterResponse poster) {
+		this.poster = poster;
 	}
 	
 }

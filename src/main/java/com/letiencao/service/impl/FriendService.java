@@ -25,8 +25,8 @@ public class FriendService implements IFriendService {
 		return friendDAO.insertOne(friendModel);
 	}
 	@Override
-	public List<FriendModel> findListFriendRequestById(Long id) {
-		return friendDAO.findListFriendRequestById(id);
+	public List<FriendModel> findListFriendRequestByIdA(Long idA) {
+		return friendDAO.findListFriendRequestByIdA(idA);
 	}
 	@Override
 	public boolean checkFriendExisted(Long idRequest, Long idRequested,boolean isFriend) {
@@ -61,6 +61,10 @@ public class FriendService implements IFriendService {
 	@Override
 	public List<FriendModel> findListFriendById(Long id) {
 		return friendDAO.findListFriendById(id);
+	}
+	@Override
+	public List<FriendModel> findListFriendRequestByIdB(Long idB) {
+		return friendDAO.findListFriendRequestByIdB(idB);
 	}
 
 }

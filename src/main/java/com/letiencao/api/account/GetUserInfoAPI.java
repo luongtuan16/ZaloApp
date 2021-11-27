@@ -57,22 +57,24 @@ public class GetUserInfoAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 //		GetUserInfoRequest getUserInfoRequest = gson.fromJson(request.getReader(), GetUserInfoRequest.class);
-		String userIdQuery = request.getParameter("userId");
+		String userIdQuery = request.getParameter("user_id");
 		GetUserInfoRequest getUserInfoRequest = new GetUserInfoRequest();
-		getUserInfoRequest.setUserId(Long.valueOf(userIdQuery));
+//		getUserInfoRequest.setUserId(Long.valueOf(userIdQuery));
 		UserInfoResponse userInfoResponse = new UserInfoResponse();
 		GetUserInforResponse getUserInforResponse = new GetUserInforResponse();
 		List<FriendModel> list = new ArrayList<FriendModel>();
-		String jwt = request.getHeader(BaseHTTP.Authorization);
+		//String jwt = request.getHeader(BaseHTTP.Authorization);
+		String jwt = request.getParameter("token");
 		// get information account from token
 		AccountModel accountModel = accountService.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 		try {
 			if (userIdQuery != null) {
+				getUserInfoRequest.setUserId(Long.valueOf(userIdQuery));
 				Long userId = getUserInfoRequest.getUserId();
 				if (userId.toString() != null) {
 					if (userId.toString().length() > 0) {
 						// Check userId = accountid(Token)
-						if (userId != accountModel.getId()) {
+//						if (userId != accountModel.getId()) {
 							// Check userId existed
 							AccountModel a = accountService.findById(userId);
 							if (a != null) {
@@ -86,39 +88,39 @@ public class GetUserInfoAPI extends HttpServlet {
 									userInfoResponse = setResponse(a, list);
 									// Check isFriend
 									boolean isFriend = friendService.checkFriendExisted(userId, accountModel.getId(), true);
-									userInfoResponse.setFriend(isFriend);
-									getUserInforResponse.setUserInfoResponse(userInfoResponse);
+									userInfoResponse.setIs_friend(isFriend);
+									getUserInforResponse.setData(userInfoResponse);
 									getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 									getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1000);
 								} else {
 									// Not Access
-									getUserInforResponse.setUserInfoResponse(null);
+									getUserInforResponse.setData(userInfoResponse);
 									getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
 									getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1009);
 
 								}
 							} else {
 								// User invalidate
-								getUserInforResponse.setUserInfoResponse(null);
+								getUserInforResponse.setData(null);
 								getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
 								getUserInforResponse.setMessage(BaseHTTP.MESSAGE_9995);
 							}
-						} else {
-							// Exception Error
-							getUserInforResponse.setUserInfoResponse(null);
-							getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
-							getUserInforResponse.setMessage(BaseHTTP.MESSAGE_9999);
-						}
+//						} else {
+//							// Exception Error
+//							getUserInforResponse.setData(null);
+//							getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
+//							getUserInforResponse.setMessage(BaseHTTP.MESSAGE_9999);
+//						}
 
 					} else {
 						// value invalid
-						getUserInforResponse.setUserInfoResponse(null);
+						getUserInforResponse.setData(null);
 						getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 						getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					}
 				} else {
 					// Parameter not enough
-					getUserInforResponse.setUserInfoResponse(null);
+					getUserInforResponse.setData(null);
 					getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 					getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1002);
 				}
@@ -129,13 +131,13 @@ public class GetUserInfoAPI extends HttpServlet {
 				list = friendService.findListFriendById(accountModel.getId());
 				// get information of userId(token)
 				userInfoResponse = setResponse(accountModel, list);
-				userInfoResponse.setFriend(false);
-				getUserInforResponse.setUserInfoResponse(userInfoResponse);
+				userInfoResponse.setIs_friend(false);
+				getUserInforResponse.setData(userInfoResponse);
 				getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 				getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1000);
 			}
 		} catch (NumberFormatException | JsonSyntaxException e) {
-			getUserInforResponse.setUserInfoResponse(null);
+			getUserInforResponse.setData(null);
 			getUserInforResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
 			getUserInforResponse.setMessage(BaseHTTP.MESSAGE_1003);
 		}
@@ -146,19 +148,19 @@ public class GetUserInfoAPI extends HttpServlet {
 	public UserInfoResponse setResponse(AccountModel accountModel, List<FriendModel> list) {
 		UserInfoResponse userInfoResponse = new UserInfoResponse();
 		userInfoResponse.setId(accountModel.getId());
-		userInfoResponse.setPhoneNumber(accountModel.getPhoneNumber());
+		userInfoResponse.setUsername(accountModel.getName());
 		userInfoResponse.setAvatar(accountModel.getAvatar());
 		long created = genericService.convertTimestampToSeconds(accountModel.getCreatedDate());
 		userInfoResponse.setCreated(created);
 		userInfoResponse.setDescription("");
 		userInfoResponse.setAvatar(accountModel.getAvatar());
-		userInfoResponse.setCoverImage("");
+		userInfoResponse.setCover_image("");
 		userInfoResponse.setLink("");
 		userInfoResponse.setAddress("");
 		userInfoResponse.setCity("");
 		userInfoResponse.setCountry("");
 		// get size of list friend userId
-		userInfoResponse.setSizeListFriend(list.size());
+		userInfoResponse.setListing(list.size());
 		userInfoResponse.setOnline("");
 		return userInfoResponse;
 	}

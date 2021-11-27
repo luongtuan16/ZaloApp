@@ -64,10 +64,12 @@ public class EditCommentAPI extends HttpServlet {
 		Gson gson = new Gson();
 //		EditCommentRequest editCommentRequest = gson.fromJson(request.getReader(), EditCommentRequest.class);
 		BaseResponse baseResponse = new BaseResponse();
-		String jwt = request.getHeader("Authorization");
-		String commentIdQuery = request.getParameter("commentId");
-		String postIdQuery = request.getParameter("postId");
-		String contentUpdateQuery = request.getParameter("contentUpdate");
+		//String jwt = request.getHeader("Authorization");
+		String jwt = request.getParameter("token");
+		
+		String commentIdQuery = request.getParameter("id_com");
+		String postIdQuery = request.getParameter("id");
+		String contentUpdateQuery = request.getParameter("comment");
 		EditCommentRequest editCommentRequest = new EditCommentRequest();
 		editCommentRequest.setCommentId(Long.valueOf(commentIdQuery));
 		editCommentRequest.setContentUpdate(contentUpdateQuery);

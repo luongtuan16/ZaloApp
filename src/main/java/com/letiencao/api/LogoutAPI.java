@@ -28,7 +28,8 @@ public class LogoutAPI extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
-		String jwt = request.getHeader(BaseHTTP.Authorization);
+		//String jwt = request.getHeader(BaseHTTP.Authorization);
+		String jwt = request.getParameter("token");
 		Gson gson = new Gson();
 		System.out.println("validate token =  "+genericService.validateToken(jwt));
 		System.out.println("telephone : "+genericService.getPhoneNumberFromToken(jwt));

@@ -16,10 +16,11 @@ public class FileDAO extends BaseDAO<FileModel> implements IFileDAO {
 	@Override
 	public FileModel insertOne(FileModel fileModel) {
 		String sql = "INSERT INTO file(deleted,createddate,createdby,content,postid) VALUES(?,?,?,?,?)";
-		Long id = insertOne(sql, fileModel.isDeleted(),fileModel.getCreatedDate(),fileModel.getCreatedBy(),fileModel.getContent(),fileModel.getPostId());
-		if(id > 0) {
+		Long id = insertOne(sql, fileModel.isDeleted(), fileModel.getCreatedDate(), fileModel.getCreatedBy(),
+				fileModel.getContent(), fileModel.getPostId());
+		if (id > 0) {
 			return findOne(id);
-		}else {
+		} else {
 			return null;
 		}
 	}
@@ -27,7 +28,7 @@ public class FileDAO extends BaseDAO<FileModel> implements IFileDAO {
 	@Override
 	public FileModel findOne(Long id) {
 		String sql = "SELECT * FROM file WHERE id = ?";
-		
+
 		return findOne(sql, new FileMapping(), id);
 	}
 
@@ -38,21 +39,32 @@ public class FileDAO extends BaseDAO<FileModel> implements IFileDAO {
 		ResultSet resultSet = null;
 		List<FileModel> list = new ArrayList<FileModel>();
 		try {
-			
+
 			String sql = "SELECT * FROM file WHERE postid = ?";
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, postId);
 			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				FileModel fileModel = new FileMapping().mapRow(resultSet);
 				list.add(fileModel);
 			}
 			return list;
 		} catch (SQLException e) {
-			System.out.println("Failed FindByPostID FileDAO : "+e.getMessage());
+			System.out.println("Failed FindByPostID FileDAO : " + e.getMessage());
 			return null;
 		}
 	}
 
+	@Override
+	public boolean deleteByPostId(Long postId) {
+		String sql = "DELETE FROM file WHERE postid = ?";
+		return delete(sql, postId);
+	}
+
+	@Override
+	public boolean deleteById(Long id) {
+		String sql = "DELETE FROM file WHERE id = ?";
+		return delete(sql, id);
+	}
 }

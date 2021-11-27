@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.SSLException;
-
 import com.letiencao.dao.ILikesDAO;
 import com.letiencao.model.LikesModel;
 
@@ -70,4 +68,10 @@ public class LikesDAO extends BaseDAO<LikesModel> implements ILikesDAO {
 		return delete(sql, postId, accountId);
 	}
 
+	@Override
+	public boolean deleteByPostId(Long postId) {
+		String sql = "DELETE FROM likes WHERE postid = ?";
+		return delete(sql, postId);
+	}
+	
 }

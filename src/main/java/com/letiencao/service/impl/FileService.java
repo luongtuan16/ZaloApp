@@ -23,8 +23,7 @@ public class FileService implements IFileService {
 
 	@Override
 	public FileModel findOne(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return fileDAO.findOne(id);
 	}
 
 	@Override
@@ -32,4 +31,13 @@ public class FileService implements IFileService {
 		return fileDAO.findByPostId(postId);
 	}
 
+	@Override
+	public boolean deleteByPostId(Long postId) {
+		return fileDAO.deleteByPostId(postId);
+	}
+
+	@Override
+	public boolean deleteById(Long id) {
+		return fileDAO.deleteById(id);
+	}
 }

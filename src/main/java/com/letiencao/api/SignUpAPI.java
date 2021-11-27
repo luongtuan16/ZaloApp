@@ -51,10 +51,10 @@ public class SignUpAPI extends HttpServlet {
 //		signUpRequest.setUuid(uuidQuery);
 		
 		try {
-			if (signUpRequest.getPhoneNumber() != null && signUpRequest.getPassword() != null
+			if (signUpRequest.getPhonenumber() != null && signUpRequest.getPassword() != null
 					&& signUpRequest.getUuid() != null) {
 
-				String phoneNumber = signUpRequest.getPhoneNumber();
+				String phoneNumber = signUpRequest.getPhonenumber();
 				String password = signUpRequest.getPassword();
 				String uuid = signUpRequest.getUuid();
 				Pattern p = Pattern.compile("[^A-Za-z0-9]");

@@ -92,4 +92,10 @@ public class CommentDAO extends BaseDAO<CommentModel> implements ICommentDAO {
 		String sql = "UPDATE comment SET content = ? WHERE id = ?";
 		return update(sql, content,id);
 	}
+
+	@Override
+	public boolean deleteByPostId(Long postId) {
+		String sql = "DELETE FROM comment WHERE postid = ?";
+		return delete(sql, postId);
+	}
 }

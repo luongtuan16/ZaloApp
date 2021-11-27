@@ -1,19 +1,19 @@
 package com.letiencao.request.comment;
 
 public class DeleteCommentRequest {
-	private Long postId;
-	private Long commentId;
-	public Long getPostId() {
-		return postId;
+	private Long id;
+	private Long id_com;
+	public Long getId() {
+		return id;
 	}
-	public void setPostId(Long postId) {
-		this.postId = postId;
+	public void setId(Long id) {
+		this.id = id;
 	}
-	public Long getCommentId() {
-		return commentId;
+	public Long getId_com() {
+		return id_com;
 	}
-	public void setCommentId(Long commentId) {
-		this.commentId = commentId;
+	public void setId_com(Long id_com) {
+		this.id_com = id_com;
 	}
 	
 

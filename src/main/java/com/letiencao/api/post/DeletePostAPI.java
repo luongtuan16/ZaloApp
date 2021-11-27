@@ -1,7 +1,6 @@
 package com.letiencao.api.post;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.PostModel;
@@ -49,21 +47,14 @@ public class DeletePostAPI extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
-		String jwt = request.getHeader(BaseHTTP.Authorization);
+		//String jwt = request.getHeader(BaseHTTP.Authorization);
+		String jwt = request.getParameter("token");
 		BaseResponse baseResponse = new BaseResponse();
 //		List<PostModel> list = postService.findAll();
 		DeletePostRequest deletePostRequest = new DeletePostRequest();
 		String idQuery = request.getParameter("id");
 		deletePostRequest.setId(Long.valueOf(idQuery));
-		// check author
-//		try {
-//			DeletePostRequest deletePostRequest = gson.fromJson(request.getReader(), DeletePostRequest.class);
-//			if (deletePostRequest != null) {
-//				if (deletePostRequest.getId() == null) {
-//					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
-//					baseResponse.setMessage(BaseHTTP.MESSAGE_1002);
-//				} else {
-		PostModel postModel = postService.findById(deletePostRequest.getId());
+		PostModel postModel = postService.findById(deletePostRequest.getId());	
 		if (postModel != null) {
 			Long id = postService.findAccountIdByPostId(deletePostRequest.getId());
 			System.out.println("ID = " + id);

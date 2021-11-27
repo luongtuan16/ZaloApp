@@ -6,7 +6,7 @@ import com.letiencao.response.BaseResponse;
 
 public class GetListCommentResponse extends BaseResponse {
 	private boolean isBlocked;
-	private List<DataGetCommentResponse> list;
+	private List<DataGetCommentResponse> data;
 	
 	public boolean isBlocked() {
 		return isBlocked;
@@ -14,11 +14,11 @@ public class GetListCommentResponse extends BaseResponse {
 	public void setBlocked(boolean isBlocked) {
 		this.isBlocked = isBlocked;
 	}
-	public List<DataGetCommentResponse> getList() {
-		return list;
+	public List<DataGetCommentResponse> getData() {
+		return data;
 	}
-	public void setList(List<DataGetCommentResponse> list) {
-		this.list = list;
+	public void setData(List<DataGetCommentResponse> data) {
+		this.data = data;
 	}
 	
 

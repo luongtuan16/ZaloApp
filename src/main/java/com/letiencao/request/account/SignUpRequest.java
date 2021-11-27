@@ -1,14 +1,14 @@
 package com.letiencao.request.account;
 
 public class SignUpRequest {
-	private String phoneNumber;
+	private String phonenumber;
 	private String password;
 	private String uuid;
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getPhonenumber() {
+		return phonenumber;
 	}
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setPhonenumber(String phonenumber) {
+		this.phonenumber = phonenumber;
 	}
 	public String getPassword() {
 		return password;

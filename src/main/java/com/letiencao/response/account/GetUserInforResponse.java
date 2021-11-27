@@ -3,15 +3,17 @@ package com.letiencao.response.account;
 import com.letiencao.response.BaseResponse;
 
 public class GetUserInforResponse extends BaseResponse {
-	private UserInfoResponse userInfoResponse;
+	private UserInfoResponse data;
 
-	public UserInfoResponse getUserInfoResponse() {
-		return userInfoResponse;
+	public UserInfoResponse getData() {
+		return data;
 	}
 
-	public void setUserInfoResponse(UserInfoResponse userInfoResponse) {
-		this.userInfoResponse = userInfoResponse;
+	public void setData(UserInfoResponse data) {
+		this.data = data;
 	}
+
+	
 	
 
 }

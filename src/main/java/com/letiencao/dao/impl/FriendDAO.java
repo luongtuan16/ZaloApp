@@ -21,7 +21,7 @@ public class FriendDAO extends BaseDAO<FriendModel> implements IFriendDAO {
 	}
 
 	@Override
-	public List<FriendModel> findListFriendRequestById(Long id) {
+	public List<FriendModel> findListFriendRequestByIdA(Long id) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -146,6 +146,50 @@ public class FriendDAO extends BaseDAO<FriendModel> implements IFriendDAO {
 		} catch (ClassCastException e) {
 			System.out.println("Failed FindOne FriendDAO : "+e.getMessage());
 			return null;
+		}
+	}
+
+	@Override
+	public List<FriendModel> findListFriendRequestByIdB(Long idB) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<FriendModel> list = new ArrayList<FriendModel>();
+		try {
+			connection = getConnection();
+			String sql = "SELECT * FROM friend WHERE idB = ? AND is_friend = false";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setLong(1, idB);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				FriendModel friendModel = new FriendModel();
+				friendModel.setId(resultSet.getLong("id"));
+				friendModel.setDeleted(resultSet.getBoolean("deleted"));
+				friendModel.setCreatedBy(resultSet.getString("createdby"));
+				friendModel.setCreatedDate(resultSet.getTimestamp("createddate"));
+				friendModel.setFriend(resultSet.getBoolean("is_friend"));
+				friendModel.setIdA(resultSet.getLong("idA"));
+				friendModel.setIdB(resultSet.getLong("idB"));
+				friendModel.setModifiedBy(resultSet.getString("modifiedby"));
+				friendModel.setModifiedDate(resultSet.getTimestamp("modifieddate"));
+				list.add(friendModel);
+			}
+			return list;
+		} catch (SQLException e) {
+			System.out.println("Failed FriendDAO 1 : " + e.getMessage());
+			return null;
+		} finally {
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e2) {
+				System.out.println("Failed FriendDAO 2 : " + e2.getMessage());
+				return null;
+			}
 		}
 	}
 

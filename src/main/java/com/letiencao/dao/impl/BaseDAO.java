@@ -16,8 +16,8 @@ import com.letiencao.mapping.IRowMapping;
 public class BaseDAO<T> implements GenericDAO<T> {
 	public Connection getConnection() {
 
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
+	try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
 //			String url = "jdbc:mysql://us-cdbr-east-04.cleardb.com:3306/heroku_8e322c7f90fe3dc";
 //			String user = "bf864af06bc616";
 //			String password = "6a5eeb1c";
@@ -27,10 +27,10 @@ public class BaseDAO<T> implements GenericDAO<T> {
 			String password = "1234";
 			
 			return DriverManager.getConnection(url, user, password);
-
 		} catch (ClassNotFoundException | SQLException e) {
 			return null;
 		}
+			
 	}
 
 	public void setParameter(PreparedStatement preparedStatement, Object... parameters) {
@@ -54,10 +54,11 @@ public class BaseDAO<T> implements GenericDAO<T> {
 					System.out.println("Boolean");
 					preparedStatement.setBoolean(index, (boolean) parameter);
 				}
-				if (parameter instanceof Integer) {
+				else if (parameter instanceof Integer) {
 					System.out.println("Int");
 					preparedStatement.setInt(index, (int) parameter);
 				}
+				
 			} catch (SQLException e) {
 				System.out.println("Loi parameter");
 			}
@@ -78,9 +79,11 @@ public class BaseDAO<T> implements GenericDAO<T> {
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				T t = (T) new Object();
-				t = rowMapping.mapRow(resultSet);
-				list.add(t);
+//				T t = (T) new Object();
+//				t = rowMapping.mapRow(resultSet);
+//				list.add(t);
+				list.add(rowMapping.mapRow(resultSet));
+				//System.out.println("**"+"**");
 			}
 			return list;
 		} catch (SQLException e) {
@@ -182,6 +185,7 @@ public class BaseDAO<T> implements GenericDAO<T> {
 
 	@Override
 	public T findOne(String sql, IRowMapping<T> rowMapping, Object... parameters) {
+
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -190,12 +194,19 @@ public class BaseDAO<T> implements GenericDAO<T> {
 			preparedStatement = connection.prepareStatement(sql);
 			setParameter(preparedStatement, parameters);
 			resultSet = preparedStatement.executeQuery();
-			T t = (T) new Object();
+//			T t = (T) new Object();
+//			List<T> results = new ArrayList<>();
+//			while (resultSet.next()) {
+//				t = rowMapping.mapRow(resultSet);
+//				results.add(rowMapping.mapRow(resultSet));
+//			}
+//			return t;
+			List<T> results = new ArrayList<>();
 			while (resultSet.next()) {
+				results.add(rowMapping.mapRow(resultSet));
 
-				t = rowMapping.mapRow(resultSet);
 			}
-			return t;
+			return results.isEmpty()?null:results.get(0);
 		} catch (SQLException e) {
 			
 			System.out.println("Failed_FindOne_AbstractDAO_1");

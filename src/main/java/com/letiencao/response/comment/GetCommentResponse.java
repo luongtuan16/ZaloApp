@@ -3,22 +3,19 @@ package com.letiencao.response.comment;
 import com.letiencao.response.BaseResponse;
 
 public class GetCommentResponse extends BaseResponse {
-	private DataGetCommentResponse dataGetCommentResponse;
-	private boolean isBlocked;
-	public DataGetCommentResponse getDataGetCommentResponse() {
-		return dataGetCommentResponse;
+	private DataGetCommentResponse data;
+	private boolean is_blocked;
+	public DataGetCommentResponse getData() {
+		return data;
 	}
-	public void setDataGetCommentResponse(DataGetCommentResponse dataGetCommentResponse) {
-		this.dataGetCommentResponse = dataGetCommentResponse;
+	public void setData(DataGetCommentResponse data) {
+		this.data = data;
 	}
-	public boolean isBlocked() {
-		return isBlocked;
+	public boolean isIs_blocked() {
+		return is_blocked;
 	}
-	public void setBlocked(boolean isBlocked) {
-		this.isBlocked = isBlocked;
+	public void setIs_blocked(boolean is_blocked) {
+		this.is_blocked = is_blocked;
 	}
-	
-	
-	
-	
+		
 }

@@ -59,19 +59,21 @@ public class SetCommentAPI extends HttpServlet {
 //		private Long postId
 //		private String content;
 		GetCommentResponse commentResponse = new GetCommentResponse();
-		String postIdQuery = request.getParameter("postId");
-		String contentQuery = request.getParameter("content");
+		String postIdQuery = request.getParameter("id");
+		String contentQuery = request.getParameter("comment");
 
 		AddCommentRequest addCommentRequest = new AddCommentRequest();
-		addCommentRequest.setPostId(Long.valueOf(postIdQuery));
-		addCommentRequest.setContent(contentQuery);
+		addCommentRequest.setId(Long.valueOf(postIdQuery));
+		addCommentRequest.setComment(contentQuery);
 
 //		AddCommentRequest addCommentRequest = gson.fromJson(request.getReader(), AddCommentRequest.class);
 
 		// Request = ..............
 
 		// get AccountId From token
-		String jwt = request.getHeader(BaseHTTP.Authorization);
+		//String jwt = request.getHeader(BaseHTTP.Authorization);
+		String jwt = request.getParameter("token");
+		
 		AccountModel accountModel = accountService.findByPhoneNumber((genericService.getPhoneNumberFromToken(jwt)));
 		// set accountId For Request
 		addCommentRequest.setAccountId(accountModel.getId());
@@ -84,8 +86,8 @@ public class SetCommentAPI extends HttpServlet {
 		}
 		addCommentRequest.setCount(commentModels.size());
 
-		Long postId = addCommentRequest.getPostId();
-		String content = addCommentRequest.getContent();
+		Long postId = addCommentRequest.getId();
+		String content = addCommentRequest.getComment();
 		Long accountId = addCommentRequest.getAccountId();
 
 		if (postId == null || content == null || accountId == null) {
@@ -114,18 +116,18 @@ public class SetCommentAPI extends HttpServlet {
 						DataGetCommentResponse dataGetCommentResponse = new DataGetCommentResponse();
 						dataGetCommentResponse.setContent(commentModel.getContent());
 						dataGetCommentResponse.setId(commentModel.getId());
-						dataGetCommentResponse.setPosterResponse(posterResponse);
+						dataGetCommentResponse.setPoster(posterResponse);
 						// Convert Date to seconds
 						dataGetCommentResponse
 								.setCreated(genericService.convertTimestampToSeconds(commentModel.getCreatedDate()));
 						commentResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 						commentResponse.setMessage(BaseHTTP.MESSAGE_1000);
-						commentResponse.setDataGetCommentResponse(dataGetCommentResponse);
-						commentResponse.setBlocked(false);
+						commentResponse.setData(dataGetCommentResponse);
+						commentResponse.setIs_blocked(false);
 					} else {
 						// This User was blocked by The Author
-						commentResponse.setDataGetCommentResponse(null);
-						commentResponse.setBlocked(true);
+						commentResponse.setData(null);
+						commentResponse.setIs_blocked(true);
 						commentResponse.setCode(String.valueOf(BaseHTTP.CODE_1009));
 						commentResponse.setMessage(BaseHTTP.MESSAGE_1009);
 					}

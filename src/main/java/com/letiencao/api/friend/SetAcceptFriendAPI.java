@@ -48,17 +48,20 @@ public class SetAcceptFriendAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		BaseResponse baseResponse = new BaseResponse();
+//		boolean checkRequested1 = friendService.checkRequestExisted(2L, 4L, false);
+//		System.out.println("check:"+checkRequested1);
 		try {
 //			FriendAcceptRequest friendAcceptRequest = gson.fromJson(request.getReader(), FriendAcceptRequest.class);
 //			if (friendAcceptRequest != null) {
-			String userIdQuery = request.getParameter("userId");
-			String isAcceptQuery = request.getParameter("isAccept");
-
+			String userIdQuery = request.getParameter("user_id");
+			String isAcceptQuery = request.getParameter("is_accept");
+			Long isAcceptLong = Long.valueOf(isAcceptQuery);
+			boolean isAcceptB = isAcceptLong==1L;
 			if (userIdQuery != null && isAcceptQuery != null) {
 				if (userIdQuery.length() > 0 && isAcceptQuery.length() > 0) {
 					FriendAcceptRequest friendAcceptRequest = new FriendAcceptRequest();
 					friendAcceptRequest.setUserId(Long.valueOf(userIdQuery));
-					friendAcceptRequest.setAccept(Boolean.valueOf(isAcceptQuery));
+					friendAcceptRequest.setAccept(isAcceptB);
 					Long userId = friendAcceptRequest.getUserId();
 					boolean isAccept = friendAcceptRequest.isAccept();
 					// check user existed
@@ -66,19 +69,23 @@ public class SetAcceptFriendAPI extends HttpServlet {
 
 					if (accountModel != null) {
 						// get token
-						String jwt = request.getHeader(BaseHTTP.Authorization);
-						AccountModel model = accountService
-								.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
+						//String jwt = request.getHeader(BaseHTTP.Authorization);
+						String jwt = request.getParameter("token");
+						
+						AccountModel model = accountService.
+								findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 						// idRequest == idRequested
 						if (model.getId() != userId) {
 							// check request existed
 							boolean checkRequested = friendService.checkRequestExisted(userId, model.getId(), false);
+							System.out.println("check: "+ checkRequested);
 							if (checkRequested == true) {
 								if (isAccept == true) {
 									// if existed => is_friend == true
 									friendService.setIsFriend(userId, model.getId());
 									baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 									baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
+						
 
 								} else if (isAccept == false) {
 									// if isAccept == 0 => remove request
@@ -88,6 +95,7 @@ public class SetAcceptFriendAPI extends HttpServlet {
 										friendService.deleteRequest(userId, model.getId());
 										baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 										baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
+							
 									} else {
 										// exception
 										baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));

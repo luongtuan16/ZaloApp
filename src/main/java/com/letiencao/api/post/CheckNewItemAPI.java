@@ -16,6 +16,7 @@ import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.PostModel;
 import com.letiencao.request.post.CheckNewItemRequest;
 import com.letiencao.response.post.CheckNewItemResponse;
+import com.letiencao.response.post.DataCheckNewItemReponse;
 import com.letiencao.service.IPostService;
 import com.letiencao.service.impl.PostService;
 
@@ -43,7 +44,9 @@ public class CheckNewItemAPI extends HttpServlet {
 //		CheckNewItemRequest checkNewItemRequest = gson.fromJson(request.getReader(), CheckNewItemRequest.class);
 		CheckNewItemResponse checkNewItemResponse = new CheckNewItemResponse();
 		CheckNewItemRequest checkNewItemRequest = new CheckNewItemRequest();
-		String last_idQuery = request.getParameter("lastId");
+		DataCheckNewItemReponse data = new DataCheckNewItemReponse();
+		String last_idQuery = request.getParameter("last_id");
+		String category_idQuery = request.getParameter("category_id");
 		try {
 			if (last_idQuery != null) {
 				checkNewItemRequest.setLastId(Long.valueOf(last_idQuery));
@@ -70,7 +73,8 @@ public class CheckNewItemAPI extends HttpServlet {
 								}
 								checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 								checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_1000);
-								checkNewItemResponse.setData(models);
+								data.setNew_items(models.size());
+								checkNewItemResponse.setData(data);
 							} else {
 								checkNewItemResponse.setCode(String.valueOf(BaseHTTP.CODE_9999));
 								checkNewItemResponse.setMessage(BaseHTTP.MESSAGE_9999);

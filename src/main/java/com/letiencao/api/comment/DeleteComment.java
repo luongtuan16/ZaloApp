@@ -50,15 +50,15 @@ public class DeleteComment extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
-		String commentIdQuery = request.getParameter("commentId");
-		String postIdQuery = request.getParameter("postId");
+		String commentIdQuery = request.getParameter("id_com");
+		String postIdQuery = request.getParameter("id");
 		DeleteCommentRequest deleteCommentRequest = new DeleteCommentRequest();
-		deleteCommentRequest.setCommentId(Long.valueOf(commentIdQuery));
-		deleteCommentRequest.setPostId(Long.valueOf(postIdQuery));
+		deleteCommentRequest.setId_com(Long.valueOf(commentIdQuery));
+		deleteCommentRequest.setId(Long.valueOf(postIdQuery));
 //		DeleteCommentRequest deleteCommentRequest = gson.fromJson(request.getReader(), DeleteCommentRequest.class);
 		BaseResponse baseResponse = new BaseResponse();
-		Long commentId = deleteCommentRequest.getCommentId();
-		Long postId = deleteCommentRequest.getPostId();
+		Long commentId = deleteCommentRequest.getId_com();
+		Long postId = deleteCommentRequest.getId();
 		if (commentId == null || postId == null) {
 			parameterNotEnough(baseResponse);
 		} else {
@@ -66,7 +66,9 @@ public class DeleteComment extends HttpServlet {
 				valueInValid(baseResponse);
 			} else {
 
-				String jwt = request.getHeader("Authorization");
+				//String jwt = request.getHeader("Authorization");
+				String jwt = request.getParameter("token");
+				
 				AccountModel accountModel = accountService
 						.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 				PostModel postModel = postService.findById(postId);

@@ -9,4 +9,5 @@ public interface ILikesDAO extends GenericDAO<LikesModel> {
 	List<LikesModel> findByPostId(Long postId);
 //	List<Long> listAccountIdLiked(Long postId);
 	boolean disLike(Long postId,Long accountId);
+	boolean deleteByPostId(Long postId);
 }

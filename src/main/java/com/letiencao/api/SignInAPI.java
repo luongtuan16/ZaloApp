@@ -54,7 +54,7 @@ public class SignInAPI extends HttpServlet {
 		SignInResponse signInResponse = new SignInResponse();
 		if (signInRequest != null) {
 			try {
-				String phoneNumber = signInRequest.getPhoneNumber();
+				String phoneNumber = signInRequest.getPhonenumber();
 				String password = signInRequest.getPassword();
 				Pattern p = Pattern.compile("[^A-Za-z0-9]");
 				Matcher m = p.matcher(password);
@@ -79,7 +79,7 @@ public class SignInAPI extends HttpServlet {
 							DataSignInResponse dataSignInResponse = new DataSignInResponse();
 							dataSignInResponse.setAvatar(accountModel.getAvatar());
 							dataSignInResponse.setId(String.valueOf(accountModel.getId()));
-							dataSignInResponse.setPhoneNumber(accountModel.getPhoneNumber());
+							dataSignInResponse.setUsername(accountModel.getName());
 							dataSignInResponse.setToken(jwt);
 							signInResponse.setData(dataSignInResponse);
 							response.getWriter().print(gson.toJson(signInResponse));

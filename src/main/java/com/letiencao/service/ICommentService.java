@@ -13,4 +13,5 @@ public interface ICommentService {
 	CommentModel findById (Long id);
 	CommentModel update(Long id,String content);
 	List<CommentModel> getListCommentByPostId(Long postId);
+	boolean deleteByPostId(Long postId);
 }

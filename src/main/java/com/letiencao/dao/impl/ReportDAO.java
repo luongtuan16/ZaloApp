@@ -27,6 +27,11 @@ public class ReportDAO extends BaseDAO<ReportModel> implements IReportDAO {
 			System.out.println("Failed FindOne ReportDAO 1 : " + e.getMessage());
 			return null;
 		}
+	}
 
+	@Override
+	public boolean deleteByPostId(Long postId) {
+		String sql = "DELETE FROM report WHERE postid = ?";
+		return delete(sql, postId);
 	}
 }

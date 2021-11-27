@@ -31,5 +31,9 @@ public class BlocksService implements IBlocksService {
 	public BlocksModel findOne(Long idBlocks, Long idBlocked) {
 		return blocksDAO.findOne(idBlocks,idBlocked);
 	}
+	@Override
+	public boolean deleteBlock(Long id) {
+		return blocksDAO.deleteBlock(id);
+	}
 
 }

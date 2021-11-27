@@ -27,18 +27,18 @@ public class AccountService extends BaseService implements IAccountService {
 	@SuppressWarnings("null")
 	@Override
 	public AccountModel signUp(SignUpRequest signUpRequest) {
-		String phoneNumber = signUpRequest.getPhoneNumber();
+		String phoneNumber = signUpRequest.getPhonenumber();
 		AccountModel model = accountDAO.findByPhoneNumber(phoneNumber);
 		if (model != null) {
 			return null;
 		} else {
 			AccountModel accountModel = new AccountModel();
-			accountModel.setPhoneNumber(signUpRequest.getPhoneNumber());
-			accountModel.setName(signUpRequest.getPhoneNumber());
+			accountModel.setPhoneNumber(signUpRequest.getPhonenumber());
+			accountModel.setName(signUpRequest.getPhonenumber());
 			accountModel.setDeleted(false);
 			accountModel.setAvatar(" ");
 			accountModel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			accountModel.setCreatedBy(signUpRequest.getPhoneNumber());
+			accountModel.setCreatedBy(signUpRequest.getPhonenumber());
 			accountModel.setCreatedDateLong(convertTimestampToSeconds(accountModel.getCreatedDate()));
 //			accountModel.setPassword(getMD5(signUpRequest.getPassword()));
 			accountModel.setPassword(signUpRequest.getPassword());
@@ -54,7 +54,7 @@ public class AccountService extends BaseService implements IAccountService {
 
 	@Override
 	public String signIn(SignInRequest signInRequest) {
-		String jwt = createJWT(signInRequest.getPhoneNumber());
+		String jwt = createJWT(signInRequest.getPhonenumber());
 //		signInRequest.setPassword(getMD5(signInRequest.getPassword()));
 		if (accountDAO.signIn(signInRequest) != null) {
 			return jwt;

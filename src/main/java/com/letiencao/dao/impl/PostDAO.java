@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,17 +28,16 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-		if (id < 1 || id > findAll().size()) {
+		if (id < 1) {
 			return null;
 		}
 		try {
 			connection = getConnection();
-			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post LEFT JOIN file ON post.id = file.postid  WHERE post.id = ?  AND post.deleted = false";
+			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post LEFT JOIN file ON post.id = file.postid  WHERE post.id = ?";//  AND post.deleted = false";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
 			PostModel model = new PostModel();
-			System.out.println("huhu");
 			List<String> files = new ArrayList<String>();
 			while (resultSet.next()) {
 				model.setId(resultSet.getLong("post.id"));
@@ -51,6 +51,7 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 				files.add(resultSet.getString("file.content"));
 				model.setFiles(files);
 			}
+			if (model.getId() == null)	return null;
 			return model;
 
 		} catch (SQLException e) {
@@ -90,10 +91,15 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		}
 	}
 
+//	@Override
+//	public boolean deleteById(Long id) {
+//		String sql = "UPDATE post SET deleted = true WHERE id = ?";
+//		return update(sql, id);
+//	}
 	@Override
 	public boolean deleteById(Long id) {
-		String sql = "UPDATE post SET deleted = true WHERE id = ?";
-		return update(sql, id);
+		String sql = "DELETE FROM post WHERE id = ?";
+		return delete(sql, id);
 	}
 
 	@Override
@@ -101,12 +107,12 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-		if (id < 1 || id > findAll().size()) {
+		if (id < 1) {
 			return -1L;
 		}
 		try {
 			connection = getConnection();
-			String sql = "SELECT accountid FROM post  WHERE id = ?";
+			String sql = "SELECT accountid FROM post WHERE id = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
@@ -179,6 +185,13 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		}
 		return null;
 
+	}
+
+	@Override
+	public boolean updateContentById(Long id, String content) {
+		Timestamp modifieddate = new Timestamp(System.currentTimeMillis());
+		String sql = "UPDATE post SET content = ?, modifieddate = ? WHERE id = ?";
+		return update(sql, content, modifieddate, id);
 	}
 
 }

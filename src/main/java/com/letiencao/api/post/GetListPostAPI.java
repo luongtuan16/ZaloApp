@@ -3,6 +3,7 @@ package com.letiencao.api.post;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PrimitiveIterator.OfDouble;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
@@ -19,9 +19,9 @@ import com.letiencao.model.FileModel;
 import com.letiencao.model.PostModel;
 import com.letiencao.request.post.GetListPostRequest;
 import com.letiencao.response.post.AuthorGetPostResponse;
-import com.letiencao.response.post.DataGetPostReponse;
+import com.letiencao.response.post.DataGetListPost;
 import com.letiencao.response.post.GetListPostResponse;
-import com.letiencao.response.post.ImageGetPostResponse;
+import com.letiencao.response.post.ListPostResponse;
 import com.letiencao.response.post.VideoGetPostResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IAccountService;
@@ -70,78 +70,78 @@ public class GetListPostAPI extends HttpServlet {
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		GetListPostResponse getListPostResponse = new GetListPostResponse();
-		GetListPostRequest getListPostRequest = new GetListPostRequest();
-		String countQuery = request.getParameter("count");
-		getListPostRequest.setCount(Integer.parseInt(countQuery));
-//		try {
-//			GetListPostRequest getListPostRequest = gson.fromJson(request.getReader(), GetListPostRequest.class);
-		List<DataGetPostReponse> dataGetPostReponses = new ArrayList<DataGetPostReponse>();
+		DataGetListPost dataGetListPost = new DataGetListPost();
+		
+		GetListPostRequest getListPostRequest = gson.fromJson(request.getReader(), GetListPostRequest.class);
+		String jwt = request.getParameter("token");
+				
+		List<ListPostResponse> listPostResponses = new ArrayList<ListPostResponse>();
 		if (getListPostRequest != null) {
 			if (String.valueOf(getListPostRequest.getCount()) != null) {
 				if (String.valueOf(getListPostRequest.getCount()).length() > 0) {
-					// tim tat ca cac bai viet cua ca nhan
-					long index = GetListPostRequest.getIndex();
-					int count = getListPostRequest.getCount();
-					String jwt = request.getHeader(BaseHTTP.Authorization);
+					// tim tat ca cac bai viet 			
 					AccountModel accountModel = accountService
 							.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 					Long accountId = accountModel.getId();
 					List<PostModel> list = new ArrayList<PostModel>();
-					// Check userId Request existed
-					if (getListPostRequest.getUserId() != null) {
-						System.out.println("!= null");
-						list = postService.findPostByAccountId(getListPostRequest.getUserId());
-						System.out.println("Size = " + list.size());
-					} else {
-						System.out.println("== null");
-						list = postService.findPostByAccountId(accountId);
-					}
-//						
+					list = postService.findAll();					
 					if (list.size() > 0) {
-						if (count + index > list.size()) {
-							count = (int) (list.size() - index);
-						}
-						for (int i = (int) index; i < count + index; i++) {
+						int count = getListPostRequest.getCount();
+						int index =(int) getListPostRequest.getIndex();
+						Long oldLastId=getListPostRequest.getLast_id();
+						Long newLastId=list.get(list.size()-1).getId();
+						int newItems = 0;
+						int checkNewItems=0;
+						for (int i = list.size()-1; i >= 0 && count>0; i--) {
 							PostModel postModel = list.get(i);
 							Long postId = postModel.getId();
-							DataGetPostReponse dataGetPostReponse = new DataGetPostReponse();
-							dataGetPostReponse.setDescribed(postModel.getContent());
-							dataGetPostReponse.setCreated(String.valueOf(postModel.getCreatedDate()));
-							dataGetPostReponse.setModified(String.valueOf(postModel.getModifiedDate()));
+							if (postId == oldLastId) {
+								//lấy xong newItems items mới, bỏ qua index-1 items đã lấy từ những lần trước
+								dataGetListPost.setNew_items(newItems);
+								i=i-index+1;
+								checkNewItems=1;
+								continue;
+							}
+							newItems++;
+							ListPostResponse listPostResponse = new ListPostResponse();	
+							listPostResponse.setId(postId);
+							listPostResponse.setDescribed(postModel.getContent());
+							listPostResponse.setCreated(String.valueOf(postModel.getCreatedDate()));
+							listPostResponse.setModified(String.valueOf(postModel.getModifiedDate()));
 							// amount of like
 							int like = likesService.findByPostId(postId);
-							dataGetPostReponse.setLike(like);
+							listPostResponse.setLike(like);
 							// amount of comment
 							int comment = commentService.findByPostId(postId);
-							dataGetPostReponse.setComment(comment);
+							listPostResponse.setComment(comment);
 							// check this user liked this post
 							boolean checkThisUserLiked = likesService.checkThisUserLiked(accountId, postId);
-							dataGetPostReponse.setLiked(checkThisUserLiked);
+							listPostResponse.setIs_liked(checkThisUserLiked);
 							// is_blocked
 							BlocksModel blocksModel = blocksService.findOne(postModel.getAccountId(), accountId);
 							if (blocksModel == null) {
-								dataGetPostReponse.setIsBlocked("UnBlocked");
+								listPostResponse.setIs_blocked("UnBlocked");
 							} else {
-								dataGetPostReponse.setIsBlocked("Blocked");
+								listPostResponse.setIs_blocked("Blocked");
 							}
 							// can_edit
 							if (accountId == postModel.getAccountId()) {
-								dataGetPostReponse.setCanEdit("Can Edit");
+								listPostResponse.setCan_edit("Can Edit");
 							} else {
-								dataGetPostReponse.setCanEdit("Can't Edit");
+								listPostResponse.setCan_edit("Can't Edit");
 							}
-							if (dataGetPostReponse.getIsBlocked().equalsIgnoreCase("Blocked")) {
-								dataGetPostReponse.setCanComment("Can't Comment");
+							if (listPostResponse.getIs_blocked().equalsIgnoreCase("Blocked")) {
+								listPostResponse.setCan_comment("Can't Comment");
 							} else {
-								dataGetPostReponse.setCanComment("Can Comment");
+								listPostResponse.setCan_comment("Can Comment");
 							}
-							// get file
-							List<ImageGetPostResponse> imageGetPostResponses = new ArrayList<ImageGetPostResponse>();
-							List<VideoGetPostResponse> videoGetPostResponses = new ArrayList<VideoGetPostResponse>();
+							//images and video
+							List<String> images = new ArrayList<String>();
+							VideoGetPostResponse video = new VideoGetPostResponse();
 							List<FileModel> listFiles = fileService.findByPostId(postId);
 							if (listFiles == null) {
-								imageGetPostResponses = null;
-								videoGetPostResponses = null;
+								images = null;
+								video = null;
 							} else {
 								System.out.println("size = " + fileService.findByPostId(postId).size());
 								for (FileModel fileModel : listFiles) {
@@ -149,82 +149,72 @@ public class GetListPostAPI extends HttpServlet {
 											|| fileModel.getContent().endsWith(".svg")
 											|| fileModel.getContent().endsWith(".JPEG")
 											|| fileModel.getContent().endsWith(".png")) {
-										ImageGetPostResponse imageGetPostResponse = new ImageGetPostResponse();
-										imageGetPostResponse.setId(fileModel.getId());
-										imageGetPostResponse.setUrl(fileModel.getContent());
-										imageGetPostResponses.add(imageGetPostResponse);
+								
+										images.add(fileModel.getContent());
 									} else if (fileModel.getContent().endsWith(".mp4")) {
-										VideoGetPostResponse videoGetPostResponse = new VideoGetPostResponse();
-										videoGetPostResponse.setId(fileModel.getId());
-										videoGetPostResponse.setUrl(fileModel.getContent());
-										videoGetPostResponses.add(videoGetPostResponse);
+
+										video.setThumbnail(fileModel.getContent());
+										video.setUrl(fileModel.getContent());
 									}
 								}
 							}
 							// get author
 							AuthorGetPostResponse authorGetPostResponse = new AuthorGetPostResponse();
-							authorGetPostResponse.setId(postModel.getAccountId());
-							authorGetPostResponse.setName(accountService.findById(postModel.getAccountId()).getName());
+							AccountModel author =accountService.findById(postModel.getAccountId());
+							authorGetPostResponse.setId(author.getId());
+							authorGetPostResponse.setName(author.getName());
 							authorGetPostResponse
-									.setAvatar(accountService.findById(postModel.getAccountId()).getAvatar());
-							dataGetPostReponse.setAuthorGetPostResponse(authorGetPostResponse);
-							System.out.println("Size = " + list.size());
-							System.out.println("IDDDD = " + list.get(i).getId());
-							dataGetPostReponse.setListImage(imageGetPostResponses);
-							dataGetPostReponse.setListVideo(videoGetPostResponses);
+									.setAvatar(author.getAvatar());
+							
+							listPostResponse.setAuthor(authorGetPostResponse);
+							listPostResponse.setImage(images);
+							listPostResponse.setVideo(video);
 							// set created modified in long type
-							dataGetPostReponse.setCreated(String
+							listPostResponse.setCreated(String
 									.valueOf(genericService.convertTimestampToSeconds(postModel.getCreatedDate())));
 							if (postModel.getModifiedDate() != null) {
-								dataGetPostReponse.setModified(String.valueOf(
+								listPostResponse.setModified(String.valueOf(
 										genericService.convertTimestampToSeconds(postModel.getModifiedDate())));
 							}
-							dataGetPostReponses.add(dataGetPostReponse);
+							listPostResponses.add(listPostResponse);
+							count--;
 						}
-						GetListPostRequest.setLastId(list.get((int) index + count - 1).getId());
+						if (checkNewItems==0) {
+							//chưa set newItems
+							newItems = 0;
+							for (int j=list.size()-1;j>=0;j--) {
+								PostModel postModel = list.get(j);
+								Long postId = postModel.getId();
+								if (postId != oldLastId) newItems++;
+								else break;
+							}
+							dataGetListPost.setNew_items(newItems);
+						}
+						dataGetListPost.setLast_id(newLastId);
+						dataGetListPost.setPosts(listPostResponses);
 						getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
 						getListPostResponse.setMessage(BaseHTTP.MESSAGE_1000);
-						System.out.println("COUNT == " + count);
-						getListPostResponse.setLastId(GetListPostRequest.getLastId());
-						GetListPostRequest.setIndex(count + GetListPostRequest.getIndex());
-						getListPostResponse.setList(dataGetPostReponses);
-						getListPostResponse.setNewItems(count);
+						getListPostResponse.setData(dataGetListPost);
+					
 					} else {
 						getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9995));
 						getListPostResponse.setMessage(BaseHTTP.MESSAGE_9995);
-						getListPostResponse.setList(null);
-						getListPostResponse.setNewItems(0);
+						getListPostResponse.setData(null);
 					}
 
 				} else {
 					getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 					getListPostResponse.setMessage(BaseHTTP.MESSAGE_1004);
-					getListPostResponse.setLastId(-1L);
-					getListPostResponse.setList(null);
-					getListPostResponse.setNewItems(-1);
+					getListPostResponse.setData(null);
 				}
 			} else {
 				getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1002));
 				getListPostResponse.setMessage(BaseHTTP.MESSAGE_1002);
-				getListPostResponse.setLastId(-1L);
-				getListPostResponse.setList(null);
-				getListPostResponse.setNewItems(-1);
+				getListPostResponse.setData(null);
 			}
-//			} else {
-//				getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_9994));
-//				getListPostResponse.setMessage(BaseHTTP.MESSAGE_9994);
-//				getListPostResponse.setLastId(-1L);
-//				getListPostResponse.setList(null);
-//				getListPostResponse.setNewItems(-1);
-//			}
+
 			response.getWriter().print(gson.toJson(getListPostResponse));
-//		} catch (NumberFormatException | JsonSyntaxException e) {
-//			getListPostResponse.setCode(String.valueOf(BaseHTTP.CODE_1003));
-//			getListPostResponse.setMessage(BaseHTTP.MESSAGE_1003);
-//			getListPostResponse.setLastId(-1L);
-//			getListPostResponse.setList(null);
-//			getListPostResponse.setNewItems(-1);
-//			response.getWriter().print(gson.toJson(getListPostResponse));
+
 		}
 
 	}

@@ -16,26 +16,25 @@ import com.google.gson.Gson;
 import com.letiencao.api.BaseHTTP;
 import com.letiencao.response.BaseResponse;
 import com.letiencao.service.GenericService;
-import com.letiencao.service.IAccountService;
-import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 
-@WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/set-comment","/api/edit-comment","/api/del-comment", "/api/get-post", "/api/blocks", "/api/like",
+@WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/set-comment","/api/edit-comment","/api/del-comment",
+		"/api/get-post", "/api/blocks", "/api/set_block_user", "/api/like","/api/edit-post",
 		"/api/delete-post", "/api/get-comment", "/api/get-list-posts", "/api/report", "/api/set-accept-friend",
 
 		"/api/set-request-friend", "/api/get-user-infor","/api/change-password",
 
-		"/api/set-request-friend", "/api/get-user-info" })
+		"/api/set-request-friend", "/api/get-user-info", "/api/set-user-info" })
 
 public class APIFilter implements Filter {
 
 	private GenericService genericService;
 
-	private IAccountService accountService;
+	//private IAccountService accountService;
 
 	public APIFilter() {
 		genericService = new BaseService();
-		accountService = new AccountService();
+		//accountService = new AccountService();
 	}
 
 	@Override
@@ -49,18 +48,17 @@ public class APIFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		httpRequest.setCharacterEncoding("utf-8");
+		httpRequest.setCharacterEncoding("utf-8");	
 		httpResponse.setContentType("application/json");
 		BaseResponse baseResponse = new BaseResponse();
 		Gson gson = new Gson();
-		String authToken = httpRequest.getHeader(BaseHTTP.Authorization);
-//		try {
-
+		//String authToken = httpRequest.getHeader(BaseHTTP.Authorization);
+		String authToken = request.getParameter("token");
 		System.out.println("authToken = " + authToken);
 		String url = httpRequest.getRequestURI();
 		System.out.println("url = " + url);
 		try {
-			if (genericService.validateToken(authToken) && genericService.getPhoneNumberFromToken(authToken) != null) {
+			if (genericService.validateToken(authToken) && genericService.getPhoneNumberFromToken(authToken) != null) {		
 				chain.doFilter(request, response);
 			}
 		} catch (IllegalArgumentException e) {

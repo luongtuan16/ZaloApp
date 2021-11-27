@@ -27,5 +27,6 @@
 													     KEY = files , VALUE = ? ;
 													     KEY = described , VALUE = ?
 													  },
-				Headers (Key = Authorization , Value = Token)
+				//Headers (Key = Authorization , Value = Token)
+				-Param query: (key=token, value=<token>)
 		

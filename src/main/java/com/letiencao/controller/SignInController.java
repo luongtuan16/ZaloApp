@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import com.letiencao.request.account.SignInRequest;
 import com.letiencao.service.IAccountService;
@@ -37,7 +36,7 @@ public class SignInController extends HttpServlet {
 		String password = request.getParameter("password");
 		SignInRequest signInRequest = new SignInRequest();
 		signInRequest.setPassword(password);
-		signInRequest.setPhoneNumber(phoneNumber);
+		signInRequest.setPhonenumber(phoneNumber);
 		String token = accountService.signIn(signInRequest);
 		if(token != null) {
 			HttpSession httpSession = request.getSession();

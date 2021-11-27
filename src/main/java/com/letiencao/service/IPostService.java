@@ -13,4 +13,5 @@ public interface IPostService {
 	List<PostModel> findAll();
 	Long findAccountIdByPostId(Long id);
 	List<PostModel> findPostByAccountId(Long accountId);
+	boolean updateContenById(Long id, String content);
 }

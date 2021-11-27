@@ -26,8 +26,8 @@ public class CommentService extends BaseService implements ICommentService {
 	public Long insertOne(AddCommentRequest addCommentRequest) {
 		CommentModel commentModel = new CommentModel();
 		commentModel.setAccountId(addCommentRequest.getAccountId());
-		commentModel.setContent(addCommentRequest.getContent());
-		commentModel.setPostId(addCommentRequest.getPostId());
+		commentModel.setContent(addCommentRequest.getComment());
+		commentModel.setPostId(addCommentRequest.getId());
 		commentModel.setDeleted(false);
 		commentModel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		AccountModel accountModel = accountDAO.findById(commentModel.getAccountId());
@@ -73,6 +73,11 @@ public class CommentService extends BaseService implements ICommentService {
 	@Override
 	public List<CommentModel> getListCommentByPostId(Long postId) {
 		return commentDAO.findByPostId(postId);
+	}
+
+	@Override
+	public boolean deleteByPostId(Long postId) {
+		return commentDAO.deleteByPostId(postId);
 	}
 
 }

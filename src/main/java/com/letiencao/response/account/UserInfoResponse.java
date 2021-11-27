@@ -2,17 +2,17 @@ package com.letiencao.response.account;
 
 public class UserInfoResponse {
 	private Long id;
-	private String phoneNumber;
+	private String username;
 	private long created;
 	private String description;// null
 	private String avatar;
-	private String coverImage; // null
+	private String cover_image; // null
 	private String link; // null
 	private String address; // null
 	private String city;// null
 	private String country; // null
-	private int sizeListFriend;
-	private boolean isFriend;
+	private int listing;
+	private boolean is_friend;
 	private String online;// null
 
 	public Long getId() {
@@ -21,14 +21,6 @@ public class UserInfoResponse {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
 	}
 
 	public long getCreated() {
@@ -47,36 +39,12 @@ public class UserInfoResponse {
 		this.avatar = avatar;
 	}
 
-	public int getSizeListFriend() {
-		return sizeListFriend;
-	}
-
-	public void setSizeListFriend(int sizeListFriend) {
-		this.sizeListFriend = sizeListFriend;
-	}
-
-	public boolean isFriend() {
-		return isFriend;
-	}
-
-	public void setFriend(boolean isFriend) {
-		this.isFriend = isFriend;
-	}
-
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getCoverImage() {
-		return coverImage;
-	}
-
-	public void setCoverImage(String coverImage) {
-		this.coverImage = coverImage;
 	}
 
 	public String getLink() {
@@ -121,10 +89,42 @@ public class UserInfoResponse {
 
 	@Override
 	public String toString() {
-		return "UserInfoResponse [id=" + id + ", phoneNumber=" + phoneNumber + ", created=" + created + ", description="
-				+ description + ", avatar=" + avatar + ", coverImage=" + coverImage + ", link=" + link + ", address="
-				+ address + ", city=" + city + ", country=" + country + ", sizeListFriend=" + sizeListFriend
-				+ ", isFriend=" + isFriend + ", online=" + online + "]";
+		return "UserInfoResponse [id=" + id + ", username=" + username + ", created=" + created + ", description="
+				+ description + ", avatar=" + avatar + ", cover_image=" + cover_image + ", link=" + link + ", address="
+				+ address + ", city=" + city + ", country=" + country + ", listing=" + listing + ", is_friend="
+				+ is_friend + ", online=" + online + "]";
 	}
-	
+
+	public String getCover_image() {
+		return cover_image;
+	}
+
+	public void setCover_image(String cover_image) {
+		this.cover_image = cover_image;
+	}
+
+	public int getListing() {
+		return listing;
+	}
+
+	public void setListing(int listing) {
+		this.listing = listing;
+	}
+
+	public boolean isIs_friend() {
+		return is_friend;
+	}
+
+	public void setIs_friend(boolean is_friend) {
+		this.is_friend = is_friend;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 }

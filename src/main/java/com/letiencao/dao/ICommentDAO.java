@@ -11,5 +11,5 @@ public interface ICommentDAO extends GenericDAO<CommentModel>{
 	List<CommentModel> findAll();
 	CommentModel findById (Long id);
 	boolean update(Long id,String content);
-
+	boolean deleteByPostId(Long postId);
 }

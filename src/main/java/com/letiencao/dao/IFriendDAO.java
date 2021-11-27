@@ -6,7 +6,8 @@ import com.letiencao.model.FriendModel;
 
 public interface IFriendDAO {
 	Long insertOne(FriendModel friendModel);
-	List<FriendModel> findListFriendRequestById(Long id);
+	List<FriendModel> findListFriendRequestByIdA(Long idA);
+	List<FriendModel> findListFriendRequestByIdB(Long idB);
 //	FriendModel checkFriendExisted(Long idRequest,Long idRequested);
 //	FriendModel checkRequestExisted(Long idRequest,Long idRequested);
 	List<FriendModel> findAll();
