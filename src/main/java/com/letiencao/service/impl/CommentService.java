@@ -80,4 +80,9 @@ public class CommentService extends BaseService implements ICommentService {
 		return commentDAO.deleteByPostId(postId);
 	}
 
+	@Override
+	public boolean deleteByAccountId(Long accountId) {
+		return commentDAO.deleteByAccountId(accountId);
+	}
+
 }

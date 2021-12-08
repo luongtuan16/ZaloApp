@@ -18,13 +18,21 @@ import com.letiencao.response.BaseResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.impl.BaseService;
 
-@WebFilter(urlPatterns = { "/api/logout", "/api/add-post", "/api/set-comment","/api/edit-comment","/api/del-comment",
-		"/api/get-post", "/api/blocks", "/api/set_block_user", "/api/like","/api/edit-post",
-		"/api/delete-post", "/api/get-comment", "/api/get-list-posts", "/api/report", "/api/set-accept-friend",
+@WebFilter(urlPatterns = { "/api/logout", "/api/add_post", "/api/set_comment","/api/edit_comment","/api/del_comment",
+		
+		"/api/get_post", "/api/set_block_diary", "/api/set_block_user", "/api/like","/api/edit_post",
+		
+		"/api/delete_post", "/api/get_comment", "/api/get_list_posts", "/api/report_post", "/api/set_accept_friend",
 
-		"/api/set-request-friend", "/api/get-user-infor","/api/change-password",
+		"/api/set_request_friend", "/api/get_user_infor","/api/change_password","/api/get_suggested_list_friends",
 
-		"/api/set-request-friend", "/api/get-user-info", "/api/set-user-info" })
+		"/api/set_request_friend", "/api/get_user_info", "/api/set_user_info", "/api/get_basic_user_info",
+		
+		"/api/get_saved_search", "/api/del_saved_search", "/api/set_role", "/api/set_user_state",
+		
+		"/api/get_user_friends", "/api/get_user_list", "/api/get_conversation","/api/delete_message",
+		
+		"/api/delete_conversation", "/api/get_list_conversation", "/api/delete_user", "/api/search"})
 
 public class APIFilter implements Filter {
 
@@ -60,6 +68,11 @@ public class APIFilter implements Filter {
 		try {
 			if (genericService.validateToken(authToken) && genericService.getPhoneNumberFromToken(authToken) != null) {		
 				chain.doFilter(request, response);
+			}
+			else {
+				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_9998));
+				baseResponse.setMessage(BaseHTTP.MESSAGE_9998);
+				httpResponse.getWriter().print(gson.toJson(baseResponse));
 			}
 		} catch (IllegalArgumentException e) {
 			if(authToken == "") {

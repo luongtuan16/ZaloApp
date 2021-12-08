@@ -38,7 +38,7 @@ import com.letiencao.service.impl.FileService;
 import com.letiencao.service.impl.LikesService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/get-post")
+@WebServlet("/api/get_post")
 public class GetPostAPI extends HttpServlet {
 
 	/**
@@ -66,6 +66,7 @@ public class GetPostAPI extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		response.setContentType("application/json");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		BaseResponse baseResponse = new BaseResponse();
@@ -99,6 +100,7 @@ public class GetPostAPI extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		DataGetPostReponse dataGetPostReponse = new DataGetPostReponse();

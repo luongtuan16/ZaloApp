@@ -63,6 +63,7 @@ public class FriendDAO extends BaseDAO<FriendModel> implements IFriendDAO {
 			}
 		}
 	}
+
 	@Override
 	public List<FriendModel> findAll() {
 		String sql = "SELECT * FROM friend";
@@ -72,22 +73,22 @@ public class FriendDAO extends BaseDAO<FriendModel> implements IFriendDAO {
 	@Override
 	public boolean setIsFriend(Long idRequest, Long idRequested) {
 		String sql = "UPDATE friend SET is_friend = true WHERE idA = ? AND idB = ?";
-		return update(sql, idRequest,idRequested);
+		return update(sql, idRequest, idRequested);
 	}
 
 	@Override
 	public boolean deleteRequest(Long idRequest, Long idRequested) {
 		String sql = "DELETE FROM friend WHERE idA = ? AND idB = ?";
-		return delete(sql, idRequest,idRequested);
+		return delete(sql, idRequest, idRequested);
 	}
 
 	@Override
-	public FriendModel findOne(Long idRequest, Long idRequested,boolean isFriend) {
+	public FriendModel findOne(Long idRequest, Long idRequested, boolean isFriend) {
 		try {
 			String sql = "SELECT * FROM friend WHERE idA = ? AND idB = ? AND is_friend = ?";
-			return findOne(sql, new FriendMapping(), idRequest,idRequested,isFriend);
+			return findOne(sql, new FriendMapping(), idRequest, idRequested, isFriend);
 		} catch (ClassCastException e) {
-			System.out.println("Failed FindOne FriendDAO : "+e.getMessage());
+			System.out.println("Failed FindOne FriendDAO : " + e.getMessage());
 			return null;
 		}
 	}
@@ -105,7 +106,7 @@ public class FriendDAO extends BaseDAO<FriendModel> implements IFriendDAO {
 			preparedStatement.setLong(1, id);
 			preparedStatement.setLong(2, id);
 			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				FriendModel friendModel = new FriendModel();
 				friendModel.setId(resultSet.getLong("id"));
 				friendModel.setDeleted(resultSet.getBoolean("deleted"));
@@ -120,31 +121,31 @@ public class FriendDAO extends BaseDAO<FriendModel> implements IFriendDAO {
 			}
 			return list;
 		} catch (SQLException e) {
-			System.out.println("Failed findListFriendById FriendDAO 1 : "+e.getMessage());
+			System.out.println("Failed findListFriendById FriendDAO 1 : " + e.getMessage());
 			return null;
-		}finally {
+		} finally {
 			try {
-				if(preparedStatement != null) {
+				if (preparedStatement != null) {
 					preparedStatement.close();
 				}
-				if(resultSet != null) {
+				if (resultSet != null) {
 					resultSet.close();
 				}
 			} catch (SQLException e2) {
-				System.out.println("Failed findListFriendById FriendDAO 2 : "+e2.getMessage());
+				System.out.println("Failed findListFriendById FriendDAO 2 : " + e2.getMessage());
 				return null;
 			}
 		}
-		
+
 	}
 
 	@Override
 	public FriendModel findOne(Long idRequest, Long idRequested) {
 		try {
 			String sql = "SELECT * FROM friend WHERE idA = ? AND idB = ?";
-			return findOne(sql, new FriendMapping(), idRequest,idRequested);
+			return findOne(sql, new FriendMapping(), idRequest, idRequested);
 		} catch (ClassCastException e) {
-			System.out.println("Failed FindOne FriendDAO : "+e.getMessage());
+			System.out.println("Failed FindOne FriendDAO : " + e.getMessage());
 			return null;
 		}
 	}
@@ -193,7 +194,10 @@ public class FriendDAO extends BaseDAO<FriendModel> implements IFriendDAO {
 		}
 	}
 
-	
-	
+	@Override
+	public boolean deleteUserFriends(Long accountId) {
+		String sqlString = "DELETE FROM friend WHERE idA = ? or idB = ?";
+		return delete(sqlString, accountId, accountId);
+	}
 
 }

@@ -8,4 +8,5 @@ public interface ILikesService {
 	boolean checkThisUserLiked(Long accountId,Long postId);
 	boolean disLike(Long postId,Long accountId);
 	boolean deleteByPostId(Long postId);
+	boolean deleteByAccountId(Long accountId);
 }

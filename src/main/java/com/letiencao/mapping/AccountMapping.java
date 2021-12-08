@@ -18,11 +18,20 @@ public class AccountMapping implements IRowMapping<AccountModel> {
 			model.setCreatedBy(resultSet.getString("createdby"));
 			model.setModifiedDate(resultSet.getTimestamp("modifieddate"));
 			model.setModifiedBy(resultSet.getString("modifiedby"));
+			
 			model.setName(resultSet.getString("name"));
 			model.setPhoneNumber(resultSet.getString("phonenumber"));
 			model.setPassword(resultSet.getString("password"));
 			model.setAvatar(resultSet.getString("avatar"));
 			model.setUuid(resultSet.getString("uuid"));
+			
+			model.setActive(resultSet.getBoolean("active"));
+			model.setAddress(resultSet.getString("address"));
+			model.setCity(resultSet.getString("city"));
+			model.setCountry(resultSet.getString("country"));
+			model.setCover_image(resultSet.getString("cover_image"));
+			model.setDescription(resultSet.getString("description"));
+			model.setRoleId(resultSet.getLong("rolekey"));
 			return model;
 		} catch (SQLException e) {
 			System.out.println("Failed__User Mapping");

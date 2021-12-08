@@ -1,7 +1,7 @@
 package com.letiencao.request.account;
 
 public class SetUserInfoRequest {
-	private String userName;
+	private String username;
 	private String description;
 	private String avatar;
 	private String address;
@@ -9,11 +9,11 @@ public class SetUserInfoRequest {
 	private String country;
 	private String cover_image;
 	private String link;
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getDescription() {
 		return description;

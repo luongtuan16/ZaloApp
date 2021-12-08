@@ -1,6 +1,7 @@
 package com.letiencao.api.verifycode;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.letiencao.api.BaseHTTP;
 import com.letiencao.model.AccountModel;
+import com.letiencao.model.VerifyCodeModel;
 import com.letiencao.response.BaseResponse;
 import com.letiencao.service.IAccountService;
 import com.letiencao.service.IVerifyCodeService;
@@ -41,11 +43,26 @@ public class GetVerifyCodeAPI extends HttpServlet {
 		if (phoneNumber != null && phoneNumber.length() == 10 && phoneNumber.charAt(0) == '0') {
 			AccountModel user = accountService.findByPhoneNumber(phoneNumber);
 			if (user != null) {
-				Random random = new Random();
-				int code = random.nextInt(8999) + 1000;
-				verifyCodeService.insertOne(phoneNumber, String.valueOf(code));
-				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
-				baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
+				if (!user.isActive()) {
+					Random random = new Random();
+					int code = random.nextInt(8999) + 1000;
+					Long t = verifyCodeService.insertOne(phoneNumber, String.valueOf(code));
+					if (t > 0) {
+						// xóa code cũ
+						List<VerifyCodeModel> listCodeModels = verifyCodeService.findByPhoneNumber(phoneNumber);
+						for (int i = 0; i < listCodeModels.size(); i++) {
+							if (t != listCodeModels.get(i).getId())
+								verifyCodeService.deleteVerifyCode(listCodeModels.get(i).getId());
+						}
+					}
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1000));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_1000);
+				} else {
+					// user da active
+					baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1010));
+					baseResponse.setMessage(BaseHTTP.MESSAGE_1010);
+				}
+
 			} else {
 				// user chua dang ky
 				baseResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
@@ -57,6 +74,7 @@ public class GetVerifyCodeAPI extends HttpServlet {
 		}
 		resp.getWriter().print(gson.toJson(baseResponse));
 	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub

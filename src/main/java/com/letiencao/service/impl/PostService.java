@@ -1,7 +1,6 @@
 package com.letiencao.service.impl;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.letiencao.dao.IAccountDAO;
@@ -36,7 +35,9 @@ public class PostService extends BaseService implements IPostService {
 	public Long insertOne(AddPostRequest addPostRequest) {
 		String described = addPostRequest.getDescribed();
 		String phoneNumber = getPhoneNumberFromToken(addPostRequest.getToken());
+		System.out.println(phoneNumber);
 		AccountModel model = accountDAO.findByPhoneNumber(phoneNumber);
+		
 		PostModel postModel = new PostModel();
 		Long accountId = model.getId();
 		postModel.setAccountId(accountId);
@@ -110,19 +111,20 @@ public class PostService extends BaseService implements IPostService {
 
 	@Override
 	public List<PostModel> findPostByAccountId(Long accountId) {
-		List<PostModel> list = postDAO.findPostByAccountId(accountId);
-		List<PostModel> list2 = new ArrayList<PostModel>();
-		for (int i = 0; i < list.size() - 1; i++) {
-			PostModel model = list.get(i);
-			if (model.getId() == list.get(i + 1).getId()) {
-				continue;
-			} else {
-				list2.add(model);
-			}
-
-		}
-		list2.add(list.get(list.size() - 1));
-		return list2;
+//		List<PostModel> list = postDAO.findPostByAccountId(accountId);
+//		List<PostModel> list2 = new ArrayList<PostModel>();
+//		for (int i = 0; i < list.size() - 1; i++) {
+//			PostModel model = list.get(i);
+//			if (model.getId() == list.get(i + 1).getId()) {
+//				continue;
+//			} else {
+//				list2.add(model);
+//			}
+//
+//		}
+//		list2.add(list.get(list.size() - 1));
+//		return list2;
+		return postDAO.findPostByAccountId(accountId);
 	}
 
 	@Override

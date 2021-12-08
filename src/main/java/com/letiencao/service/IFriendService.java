@@ -14,4 +14,7 @@ public interface IFriendService {
 	boolean deleteRequest(Long idRequest,Long idRequested);
 	FriendModel findOne(Long idRequest,Long idRequested);
 	List<FriendModel> findListFriendById(Long id);
+	int sameFriends(Long idA, Long idB);
+	
+	boolean deleteUserFriends(Long accountId);
 }

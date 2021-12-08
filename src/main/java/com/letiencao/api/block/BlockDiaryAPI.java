@@ -22,7 +22,7 @@ import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.BlocksService;
 //block-diary
-@WebServlet("/api/blocks")
+@WebServlet("/api/set_block_diary")
 public class BlockDiaryAPI extends HttpServlet {
 
 	/*********************************

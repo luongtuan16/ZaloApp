@@ -146,24 +146,34 @@ public class PostDAO extends BaseDAO<PostModel> implements IPostDAO {
 		ResultSet resultSet = null;
 		try {
 			connection = getConnection();
-			String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post LEFT JOIN file ON post.id = file.postid  WHERE post.accountid = ?  AND post.deleted = false";
+			//String sql = "SELECT post.id,post.deleted,post.content,post.createdby,post.createddate,post.modifiedby,post.modifieddate,post.accountid,file.content FROM post LEFT JOIN file ON post.id = file.postid  WHERE post.accountid = ?  AND post.deleted = false";
+			String sql = "SELECT * FROM post WHERE accountid = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, accountId);
 			resultSet = preparedStatement.executeQuery();
 			List<PostModel> list = new ArrayList<PostModel>();
-			List<String> files = new ArrayList<String>();
+			//List<String> files = new ArrayList<String>();
 			while (resultSet.next()) {
 				PostModel model = new PostModel();
-				model.setId(resultSet.getLong("post.id"));
-				model.setDeleted(resultSet.getBoolean("post.deleted"));
-				model.setContent(resultSet.getString("post.content"));
-				model.setCreatedBy(resultSet.getString("post.createdby"));
-				model.setCreatedDate(resultSet.getTimestamp("post.createddate"));
-				model.setModifiedBy(resultSet.getString("post.modifiedby"));
-				model.setModifiedDate(resultSet.getTimestamp("post.modifieddate"));
-				model.setAccountId(resultSet.getLong("post.accountid"));
-				files.add(resultSet.getString("file.content"));
-				model.setFiles(files);
+//				model.setId(resultSet.getLong("post.id"));
+//				model.setDeleted(resultSet.getBoolean("post.deleted"));
+//				model.setContent(resultSet.getString("post.content"));
+//				model.setCreatedBy(resultSet.getString("post.createdby"));
+//				model.setCreatedDate(resultSet.getTimestamp("post.createddate"));
+//				model.setModifiedBy(resultSet.getString("post.modifiedby"));
+//				model.setModifiedDate(resultSet.getTimestamp("post.modifieddate"));
+//				model.setAccountId(resultSet.getLong("post.accountid"));
+				//files.add(resultSet.getString("file.content"));
+				//model.setFiles(files);
+				model.setId(resultSet.getLong("id"));
+				model.setDeleted(resultSet.getBoolean("deleted"));
+				model.setContent(resultSet.getString("content"));
+				model.setCreatedBy(resultSet.getString("createdby"));
+				model.setCreatedDate(resultSet.getTimestamp("createddate"));
+				model.setModifiedBy(resultSet.getString("modifiedby"));
+				model.setModifiedDate(resultSet.getTimestamp("modifieddate"));
+				model.setAccountId(resultSet.getLong("accountid"));
+				
 				list.add(model);
 			}
 //			System.out.println("model = " + model.getId());

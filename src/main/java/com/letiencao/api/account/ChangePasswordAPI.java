@@ -16,7 +16,7 @@ import com.letiencao.service.IAccountService;
 import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 
-@WebServlet("/api/change-password")
+@WebServlet("/api/change_password")
 public class ChangePasswordAPI extends HttpServlet {
 	private GenericService genericService;
 	private IAccountService accountService;

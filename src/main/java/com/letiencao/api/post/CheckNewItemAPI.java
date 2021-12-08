@@ -20,7 +20,7 @@ import com.letiencao.response.post.DataCheckNewItemReponse;
 import com.letiencao.service.IPostService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/check-new-item")
+@WebServlet("/api/check_new_item")
 public class CheckNewItemAPI extends HttpServlet {
 
 	/**

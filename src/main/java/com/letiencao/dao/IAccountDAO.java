@@ -17,4 +17,18 @@ public interface IAccountDAO extends GenericDAO<AccountModel> {
 	List<AccountModel> findListAccountByKeyword(String keyword);
 
 	boolean changePassword(AccountModel accountModel);
+	
+	boolean activeAccount(Long id);
+	
+	boolean deactiveAccount(Long id);
+	
+	boolean updateAccount(AccountModel account);
+
+	List<AccountModel> findAll();
+	
+	boolean setRole(Long acccountId, Long roleId);
+	
+	boolean deleteAccount(Long accountId);
+	
+	List<AccountModel> searchAccount(String keyword);
 }

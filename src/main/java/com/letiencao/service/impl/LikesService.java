@@ -74,4 +74,9 @@ public class LikesService extends BaseService implements ILikesService {
 		return likesDAO.deleteByPostId(postId);
 	}
 
+	@Override
+	public boolean deleteByAccountId(Long accountId) {
+		return likesDAO.deleteByAccountId(accountId);
+	}
+
 }

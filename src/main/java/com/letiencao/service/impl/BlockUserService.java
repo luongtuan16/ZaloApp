@@ -37,5 +37,9 @@ public class BlockUserService implements IBlockUserService{
 	public boolean deleteBlock(Long id) {
 		return blockUserDAO.deleteBlock(id);
 	}
+	@Override
+	public boolean deleteUserBlocks(Long accountId) {
+		return blockUserDAO.deleteUserBlocks(accountId);
+	}
 	
 }

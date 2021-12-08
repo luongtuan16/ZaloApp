@@ -27,7 +27,7 @@ import com.letiencao.service.impl.PostService;
 import com.letiencao.service.impl.ReportService;
 import com.letiencao.service.impl.TypeReportService;
 
-@WebServlet("/api/report")
+@WebServlet("/api/report_post")
 public class ReportAPI extends HttpServlet {
 
 	/**

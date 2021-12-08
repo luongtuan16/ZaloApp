@@ -28,4 +28,10 @@ public class BlocksDAO extends BaseDAO<BlocksModel> implements IBlocksDAO {
 		String sql = "DELETE FROM blocks WHERE id = ?";
 		return delete(sql, id);
 	}
+
+	@Override
+	public boolean deleteUserBlocks(Long accountId) {
+		String sql = "DELETE FROM blocks WHERE idblocks = ? or idblocked = ?";
+		return delete(sql, accountId, accountId);
+	}
 }

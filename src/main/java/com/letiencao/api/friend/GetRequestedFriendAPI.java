@@ -21,11 +21,13 @@ import com.letiencao.response.friend.GetRequestedFriendResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IAccountService;
 import com.letiencao.service.IFriendService;
+import com.letiencao.service.IRoleService;
 import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.FriendService;
+import com.letiencao.service.impl.RoleService;
 
-@WebServlet("/api/get-requested-friend")
+@WebServlet("/api/get_requested_friend")
 public class GetRequestedFriendAPI extends HttpServlet {
 	/**
 	 * 
@@ -35,48 +37,49 @@ public class GetRequestedFriendAPI extends HttpServlet {
 	private IFriendService friendService;
 	private IAccountService accountService;
 	private GenericService genericService;
+	private IRoleService roleService;
 
 	public GetRequestedFriendAPI() {
 		genericService = new BaseService();
 		friendService = new FriendService();
 		accountService = new AccountService();
-
+		roleService = new RoleService();
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		String jwt = request.getParameter("token");
 		AccountModel accountModel = accountService.findByPhoneNumber(genericService.getPhoneNumberFromToken(jwt));
 		GetRequestedFriendRequest dataRequest = gson.fromJson(request.getReader(), GetRequestedFriendRequest.class);
-		
+
 		List<FriendsResponse> friends = new ArrayList<FriendsResponse>();
 		DataGetRequestedFriend dataGetRequestedFriend = new DataGetRequestedFriend();
 		GetRequestedFriendResponse getRequestedFriendResponse = new GetRequestedFriendResponse();
-		
-		if (accountModel.getUuid().equals("1")) {
+
+		if (accountModel.getRoleId() == roleService.findId("user")) {
 			// request by user
 			dataRequest.setUser_id(accountModel.getId());
-		} else if (accountModel.getUuid().equals("2")) {
-			// request by admin
+		} else if (accountModel.getRoleId() > roleService.findId("user")) {
+			// request by admin or superadmin
 			if (dataRequest.getUser_id() == null)
 				dataRequest.setUser_id(accountModel.getId());
 			else {
-				//check user exist 
+				// check user exist
 				AccountModel user = accountService.findById(dataRequest.getUser_id());
 				if (user == null) {
 					getRequestedFriendResponse.setCode(String.valueOf(BaseHTTP.CODE_1004));
 					getRequestedFriendResponse.setMessage(BaseHTTP.MESSAGE_1004);
 					response.getWriter().print(gson.toJson(getRequestedFriendResponse));
-					return ;
+					return;
 				}
 			}
 		}
-		
-		
+
 		List<FriendModel> listFriends = friendService.findListFriendRequestByIdB(dataRequest.getUser_id());
 		int count = dataRequest.getCount();
 		for (int i = dataRequest.getIndex(); i < listFriends.size() && count > 0; i++) {

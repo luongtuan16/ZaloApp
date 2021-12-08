@@ -22,7 +22,7 @@ import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.FriendService;
 
-@WebServlet("/api/set-accept-friend")
+@WebServlet("/api/set_accept_friend")
 public class SetAcceptFriendAPI extends HttpServlet {
 
 	/**

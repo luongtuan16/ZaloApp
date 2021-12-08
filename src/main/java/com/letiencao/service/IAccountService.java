@@ -13,4 +13,13 @@ public interface IAccountService {
 	AccountModel findById(Long id);
 	List<AccountModel> findListAccountByKeyword(String keyword,String token);
 	boolean changePassword(String token,String password,String newPassword);
+	boolean activeAccount(Long id);
+	boolean deactiveAccount(Long id);
+	boolean updateAccount(AccountModel account);
+	List<AccountModel> listSuggestedAccounts(Long id);
+	List<AccountModel> findAll();
+	boolean setRole(Long accountId, String role);
+	boolean setRole(Long accountId, Long roleId);
+	boolean deleteAccount(Long accountId);
+	List<AccountModel> searchAccount(String keyword);
 }

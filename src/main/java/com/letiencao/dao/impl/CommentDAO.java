@@ -32,7 +32,7 @@ public class CommentDAO extends BaseDAO<CommentModel> implements ICommentDAO {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, postId);
 			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				CommentModel commentModel = new CommentModel();
 				commentModel.setAccountId(resultSet.getLong("accountid"));
 				commentModel.setCreatedBy(resultSet.getString("createdby"));
@@ -47,18 +47,18 @@ public class CommentDAO extends BaseDAO<CommentModel> implements ICommentDAO {
 			}
 			return commentModels;
 		} catch (SQLException e) {
-			System.out.println("findByPostId commentDAO 1 : "+e.getMessage());
+			System.out.println("findByPostId commentDAO 1 : " + e.getMessage());
 			return null;
-		}finally {
+		} finally {
 			try {
-				if(preparedStatement != null) {
+				if (preparedStatement != null) {
 					preparedStatement.close();
 				}
-				if(resultSet != null) {
+				if (resultSet != null) {
 					resultSet.close();
 				}
 			} catch (SQLException e2) {
-				System.out.println("findByPostId commentDAO 2 : "+e2.getMessage());
+				System.out.println("findByPostId commentDAO 2 : " + e2.getMessage());
 				return null;
 			}
 		}
@@ -67,35 +67,41 @@ public class CommentDAO extends BaseDAO<CommentModel> implements ICommentDAO {
 	@Override
 	public boolean deleteComment(Long postId, Long commentId) {
 		String sql = "DELETE FROM comment WHERE id = ? AND postid = ?";
-		return delete(sql, commentId,postId);
+		return delete(sql, commentId, postId);
 	}
 
 	@Override
 	public List<CommentModel> findAll() {
 		String sql = "SELECT * FROM comment";
-		return findAll(sql,new CommentMapping());
+		return findAll(sql, new CommentMapping());
 	}
 
 	@Override
 	public CommentModel findById(Long id) {
 		String sql = "SELECT * FROM comment WHERE id = ?";
 		try {
-			return findOne(sql,new CommentMapping(),id);	
+			return findOne(sql, new CommentMapping(), id);
 		} catch (ClassCastException e) {
-			System.out.println("Failed findById CommentDAO : "+e.getMessage());
+			System.out.println("Failed findById CommentDAO : " + e.getMessage());
 			return null;
 		}
 	}
 
 	@Override
-	public boolean update(Long id,String content) {
+	public boolean update(Long id, String content) {
 		String sql = "UPDATE comment SET content = ? WHERE id = ?";
-		return update(sql, content,id);
+		return update(sql, content, id);
 	}
 
 	@Override
 	public boolean deleteByPostId(Long postId) {
 		String sql = "DELETE FROM comment WHERE postid = ?";
 		return delete(sql, postId);
+	}
+
+	@Override
+	public boolean deleteByAccountId(Long accountId) {
+		String sqlString = "DELETE FROM comment WHERE accountid = ?";
+		return delete(sqlString, accountId);
 	}
 }

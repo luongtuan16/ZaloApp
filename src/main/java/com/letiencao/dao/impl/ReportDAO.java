@@ -34,4 +34,10 @@ public class ReportDAO extends BaseDAO<ReportModel> implements IReportDAO {
 		String sql = "DELETE FROM report WHERE postid = ?";
 		return delete(sql, postId);
 	}
+
+	@Override
+	public boolean deleteByAccountId(Long accountId) {
+		String sql = "DELETE FROM report WHERE accountid = ?";
+		return delete(sql, accountId);
+	}
 }

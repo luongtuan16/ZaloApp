@@ -29,7 +29,7 @@ import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.FileService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/add-post")
+@WebServlet("/api/add_post")
 //@MultipartConfig
 public class AddPostAPI extends HttpServlet {
 
@@ -131,7 +131,7 @@ public class AddPostAPI extends HttpServlet {
 						return;
 					}
 				} else if (fileItem.getFieldName().equalsIgnoreCase("described")) {
-					String described = fileItem.getString();
+					String described = fileItem.getString("utf-8");
 					if (described.length() > 0) {
 						describedRequest = described;
 					} else {
@@ -183,7 +183,7 @@ public class AddPostAPI extends HttpServlet {
 				}
 				DataAddPostResponse dataPostResponse = new DataAddPostResponse();
 				dataPostResponse.setId(id);
-				dataPostResponse.setUrl("/CZone/api/get-post?id=" + id);
+				dataPostResponse.setUrl("/CZone/api/get_post?id=" + id);
 				addPostResponse.setCode(String.valueOf(1000));
 				addPostResponse.setDataPostResponse(dataPostResponse);
 				addPostResponse.setMessage("OK");

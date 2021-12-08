@@ -1,7 +1,6 @@
 package com.letiencao.api.comment;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,13 +14,8 @@ import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
 import com.letiencao.model.CommentModel;
 import com.letiencao.model.PostModel;
-import com.letiencao.request.comment.AddCommentRequest;
-import com.letiencao.request.comment.DeleteCommentRequest;
 import com.letiencao.request.comment.EditCommentRequest;
 import com.letiencao.response.BaseResponse;
-import com.letiencao.response.comment.DataGetCommentResponse;
-import com.letiencao.response.comment.GetCommentResponse;
-import com.letiencao.response.comment.PosterResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IAccountService;
 import com.letiencao.service.IBlocksService;
@@ -33,7 +27,7 @@ import com.letiencao.service.impl.BlocksService;
 import com.letiencao.service.impl.CommentService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/edit-comment")
+@WebServlet("/api/edit_comment")
 public class EditCommentAPI extends HttpServlet {
 
 	/*************************

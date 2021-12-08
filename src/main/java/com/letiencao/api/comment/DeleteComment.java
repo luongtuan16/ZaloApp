@@ -27,7 +27,7 @@ import com.letiencao.service.impl.BlocksService;
 import com.letiencao.service.impl.CommentService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/del-comment")
+@WebServlet("/api/del_comment")
 public class DeleteComment extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ICommentService commentService;

@@ -1,6 +1,7 @@
 package com.letiencao.service.impl;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.letiencao.dao.IVerifyCodeDAO;
 import com.letiencao.dao.impl.VerifyCodeDAO;
@@ -26,8 +27,15 @@ public class VerifyCodeService implements IVerifyCodeService {
 
 	@Override
 	public boolean deleteVerifyCode(Long id) {
-		// TODO Auto-generated method stub
-		return false;
+		return verifyCodeDAO.deleteVerifyCode(id);
+	}
+	@Override
+	public List<VerifyCodeModel> findByPhoneNumber(String phoneNumber) {
+		return verifyCodeDAO.findByPhoneNumber(phoneNumber);
+	}
+	@Override
+	public boolean deleteByPhoneNumber(String phoneNumber) {
+		return verifyCodeDAO.deleteByPhoneNumber(phoneNumber);
 	}
 	
 }

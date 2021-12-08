@@ -73,5 +73,11 @@ public class LikesDAO extends BaseDAO<LikesModel> implements ILikesDAO {
 		String sql = "DELETE FROM likes WHERE postid = ?";
 		return delete(sql, postId);
 	}
+
+	@Override
+	public boolean deleteByAccountId(Long accountId) {
+		String sql = "DELETE FROM likes WHERE accountid = ?";
+		return delete(sql, accountId);
+	}
 	
 }

@@ -21,7 +21,7 @@ import com.letiencao.service.impl.AccountService;
 import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/delete-post")
+@WebServlet("/api/delete_post")
 public class DeletePostAPI extends HttpServlet {
 
 	/**

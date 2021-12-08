@@ -31,7 +31,7 @@ import com.letiencao.service.impl.BlocksService;
 import com.letiencao.service.impl.CommentService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/get-comment")
+@WebServlet("/api/get_comment")
 public class GetListCommentAPI extends HttpServlet {
 
 	/**
@@ -58,6 +58,7 @@ public class GetListCommentAPI extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 //		GetListCommentRequest getListCommentRequest = gson.fromJson(request.getReader(), GetListCommentRequest.class);

@@ -119,4 +119,97 @@ public class AccountDAO extends BaseDAO<AccountModel> implements IAccountDAO {
 				accountModel.getPassword(), accountModel.getId());
 	}
 
+	@Override
+	public boolean activeAccount(Long id) {
+		String sql = "UPDATE account SET active = true WHERE id = ?";
+		return update(sql, id);
+	}
+
+	@Override
+	public boolean updateAccount(AccountModel account) {
+		String sql = "UPDATE account SET modifieddate = ?, modifiedby = ?, name = ?, avatar = ?, description = ?,"
+				+ "city = ?, address= ?, country = ?, cover_image = ? WHERE id = ?";
+		return update(sql, account.getModifiedDate(), account.getModifiedBy(), account.getName(), account.getAvatar(),
+				account.getDescription(), account.getCity(), account.getAddress(), account.getCountry(),
+				account.getCover_image(), account.getId());
+	}
+
+	@Override
+	public List<AccountModel> findAll() {
+		String sql = "SELECT * FROM account";
+		return findAll(sql, new AccountMapping());
+	}
+
+	@Override
+	public boolean setRole(Long acccountId, Long roleId) {
+		String sqlString = "UPDATE account SET rolekey = ? WHERE id = ?";
+		return update(sqlString, roleId, acccountId);
+	}
+
+	@Override
+	public boolean deactiveAccount(Long id) {
+		String sql = "UPDATE account SET active = false WHERE id = ?";
+		return update(sql, id);
+	}
+
+	@Override
+	public boolean deleteAccount(Long accountId) {
+		String sql = "DELETE FROM account WHERE id = ?";
+		return delete(sql, accountId);
+	}
+
+	@Override
+	public List<AccountModel> searchAccount(String keyword) {
+		String temp[] = keyword.split(" ");
+		List<AccountModel> accounts = new ArrayList<AccountModel>();
+		String str = "";
+		for (int i = 0; i < temp.length; i++) {
+			str += "%" + temp[i] + "%";
+		}
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			String sql = "SELECT * FROM account WHERE name LIKE ? OR phonenumber LIKE ?";
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, str);
+			preparedStatement.setString(2, str);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				AccountModel model = new AccountModel();
+				model.setId(resultSet.getLong("id"));
+				model.setDeleted(resultSet.getBoolean("deleted"));
+				model.setCreatedDate(resultSet.getTimestamp("createddate"));
+				model.setCreatedBy(resultSet.getString("createdby"));
+				model.setModifiedDate(resultSet.getTimestamp("modifieddate"));
+				model.setModifiedBy(resultSet.getString("modifiedby"));
+				model.setName(resultSet.getString("name"));
+				model.setPhoneNumber(resultSet.getString("phonenumber"));
+				model.setPassword(resultSet.getString("password"));
+				model.setAvatar(resultSet.getString("avatar"));
+				model.setUuid(resultSet.getString("uuid"));
+
+				accounts.add(model);
+			}
+			return accounts;
+		} catch (SQLException e) {
+			System.out.println("fail searchAccount AccountDAO 1 : " + e.getMessage());
+			return null;
+		} finally {
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e2) {
+				System.out.println("Fail searchAccount AccountDAO 2 : " + e2.getMessage());
+				return null;
+			}
+		}
+	}
+
 }

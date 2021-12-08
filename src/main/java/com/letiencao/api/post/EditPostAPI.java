@@ -22,7 +22,6 @@ import com.letiencao.model.AccountModel;
 import com.letiencao.model.FileModel;
 import com.letiencao.model.PostModel;
 import com.letiencao.response.BaseResponse;
-import com.letiencao.response.post.AddPostResponse;
 import com.letiencao.service.GenericService;
 import com.letiencao.service.IAccountService;
 import com.letiencao.service.IFileService;
@@ -32,7 +31,7 @@ import com.letiencao.service.impl.BaseService;
 import com.letiencao.service.impl.FileService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/edit-post")
+@WebServlet("/api/edit_post")
 public class EditPostAPI extends HttpServlet {
 
 	/**
@@ -56,6 +55,7 @@ public class EditPostAPI extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		List<Long> DelImages = new ArrayList<Long>();
@@ -90,7 +90,7 @@ public class EditPostAPI extends HttpServlet {
 						return;
 					}
 				} else if (fileItem.getFieldName().equalsIgnoreCase("described")) {
-					described = fileItem.getString();
+					described = fileItem.getString("utf-8");
 
 				} else if (fileItem.getFieldName().equalsIgnoreCase("image_del")) {
 					DelImages = toArrayList(fileItem.getString());

@@ -3,7 +3,6 @@ package com.letiencao.api.post;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PrimitiveIterator.OfDouble;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,7 +37,7 @@ import com.letiencao.service.impl.FileService;
 import com.letiencao.service.impl.LikesService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/get-list-posts")
+@WebServlet("/api/get_list_posts")
 public class GetListPostAPI extends HttpServlet {
 
 	/**
@@ -67,6 +66,7 @@ public class GetListPostAPI extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 		GetListPostResponse getListPostResponse = new GetListPostResponse();
@@ -100,6 +100,7 @@ public class GetListPostAPI extends HttpServlet {
 								dataGetListPost.setNew_items(newItems);
 								i=i-index+1;
 								checkNewItems=1;
+								i--;
 								continue;
 							}
 							newItems++;

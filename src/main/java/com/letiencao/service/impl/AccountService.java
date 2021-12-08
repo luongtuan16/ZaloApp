@@ -5,10 +5,16 @@ import java.util.List;
 
 import com.letiencao.dao.IAccountDAO;
 import com.letiencao.dao.IBlocksDAO;
+import com.letiencao.dao.IFriendDAO;
+import com.letiencao.dao.IRoleDAO;
 import com.letiencao.dao.impl.AccountDAO;
 import com.letiencao.dao.impl.BlocksDAO;
+import com.letiencao.dao.impl.FriendDAO;
+import com.letiencao.dao.impl.RoleDAO;
 import com.letiencao.model.AccountModel;
 import com.letiencao.model.BlocksModel;
+import com.letiencao.model.FriendModel;
+import com.letiencao.model.RoleModel;
 import com.letiencao.request.account.SignInRequest;
 import com.letiencao.request.account.SignUpRequest;
 import com.letiencao.service.IAccountService;
@@ -17,11 +23,14 @@ public class AccountService extends BaseService implements IAccountService {
 
 	private IAccountDAO accountDAO;
 	private IBlocksDAO blocksDAO;
-
+	private IFriendDAO friendDAO;
+	private IRoleDAO roleDAO;
 	public AccountService() {
 		// TODO Auto-generated constructor stub
 		accountDAO = new AccountDAO();
 		blocksDAO = new BlocksDAO();
+		friendDAO = new FriendDAO();
+		roleDAO = new RoleDAO();
 	}
 
 	@SuppressWarnings("null")
@@ -102,5 +111,68 @@ public class AccountService extends BaseService implements IAccountService {
 			return false;
 		}
 
+	}
+
+	@Override
+	public boolean activeAccount(Long id) {
+		return accountDAO.activeAccount(id);
+	}
+
+	@Override
+	public boolean updateAccount(AccountModel account) {
+		account.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+		account.setModifiedBy(account.getPhoneNumber());
+		return accountDAO.updateAccount(account);
+	}
+
+	@Override
+	public List<AccountModel> listSuggestedAccounts(Long id) {
+		List<AccountModel> listacc = accountDAO.findAll();
+		int i=0;
+		while (i<listacc.size()) {
+			if (listacc.get(i).getId() == id)
+				listacc.remove(i);
+			else {
+				FriendModel friendModel1 = friendDAO.findOne(id, listacc.get(i).getId(), true);
+				FriendModel friendModel2 =friendDAO.findOne(listacc.get(i).getId(),id, true);
+				if (friendModel1 !=null || friendModel2 !=null)
+					listacc.remove(i);
+				else i++;
+			}
+		}
+		return listacc;
+	}
+
+	@Override
+	public boolean setRole(Long accountId, String role) {
+		RoleModel roleModel = roleDAO.findByRoleString(role);
+		if (roleModel!=null)
+			return accountDAO.setRole(accountId, roleModel.getId());
+		return false;
+	}
+
+	@Override
+	public boolean setRole(Long accountId, Long roleId) {
+		return accountDAO.setRole(accountId, roleId);
+	}
+
+	@Override
+	public boolean deactiveAccount(Long id) {
+		return accountDAO.deactiveAccount(id);
+	}
+
+	@Override
+	public List<AccountModel> findAll() {
+		return accountDAO.findAll();
+	}
+
+	@Override
+	public boolean deleteAccount(Long accountId) {
+		return accountDAO.deleteAccount(accountId);
+	}
+
+	@Override
+	public List<AccountModel> searchAccount(String keyword) {
+		return accountDAO.searchAccount(keyword);
 	}
 }

@@ -30,7 +30,7 @@ import com.letiencao.service.impl.BlocksService;
 import com.letiencao.service.impl.CommentService;
 import com.letiencao.service.impl.PostService;
 
-@WebServlet("/api/set-comment")
+@WebServlet("/api/set_comment")
 public class SetCommentAPI extends HttpServlet {
 	/**
 	 * 
@@ -54,6 +54,7 @@ public class SetCommentAPI extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 		Gson gson = new Gson();
 //		private Long postId
